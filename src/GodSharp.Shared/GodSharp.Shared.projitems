@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>c4f34d2a-0cba-4568-9c62-11c5f41225b0</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>GodSharp</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Socket\Base\SocketBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socket\Base\SocketExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socket\Base\SocketResult.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socket\Client\SocketClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socket\Enum\SocketStatus.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socket\Server\SocketServer.cs" />
+  </ItemGroup>
+</Project>
