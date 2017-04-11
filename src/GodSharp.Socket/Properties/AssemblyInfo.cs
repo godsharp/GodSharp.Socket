@@ -4,8 +4,8 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("A socket server and client made by GodSharp.")]
-[assembly: AssemblyDescription("A socket server and client made by GodSharp.")]
+[assembly: AssemblyTitle("A easy to used socket server and client for .NET.")]
+[assembly: AssemblyDescription("A easy to used socket server and client for .NET.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("https://github.com/GodSharp")]
 [assembly: AssemblyProduct("GodSharp.Socket")]

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>GodSharp.Socket</id>
+    <version>1.0.0</version>
+    <title>GodSharp.Socket</title>
+    <authors>seayxu</authors>
+    <owners>seayxu</owners>
+    <licenseUrl>https://github.com/godsharp/GodSharp.Socket/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/godsharp/GodSharp.Socket</projectUrl>
+    <iconUrl>https://avatars3.githubusercontent.com/u/26563296</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A easy to used socket server and client for .NET.</description>
+    <releaseNotes>A easy to used socket server and client for .NET.</releaseNotes>
+    <copyright>Copyright GodSharp 2017</copyright>
+    <tags>GodSharp.Socket,Socket,GodSharp</tags>
+  </metadata>
+</package>
