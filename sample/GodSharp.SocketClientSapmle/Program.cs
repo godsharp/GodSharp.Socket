@@ -6,7 +6,8 @@ namespace GodSharp.SocketClientSapmle
     {
         static void Main()
         {
-            SocketClient client = new SocketClient("127.0.0.1", 7788);
+            Console.ReadKey();
+            SocketClient client = new SocketClient("127.0.0.1", 12307);
 
             client.OnData = (socket, data) =>
             {

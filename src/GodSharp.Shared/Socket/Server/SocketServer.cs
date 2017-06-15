@@ -1,54 +1,65 @@
 ﻿using GodSharp.Protocol;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
+// ReSharper disable ArrangeThisQualifier
 
 namespace GodSharp
 {
     public class SocketServer : SocketBase, IDisposable
     {
 
-        private uint _backlog;
+        private int backlog;
         private Action<Socket> onOpen;
 
         /// <summary>
         /// The client list.
         /// </summary>
-        internal List<Socket> _socketClients;
+        internal List<Socket> SocketClients;
 
         /// <summary>
         /// The execute method when client connected.
         /// </summary>
 
+        /// <summary>
+        /// Gets the remote endpoint.
+        /// </summary>
+        //public EndPoint RemoteEndPoint { get => remoteEndPoint; private set => remoteEndPoint = value; }
+
         public Action<Socket> OnOpen { get => onOpen; set => onOpen = value; }
+
+        /// <summary>
+        /// The execute method when received data.
+        /// </summary>
+        public Action<SocketServer, byte[]> OnData { get; set; }
 
         /// <summary>
         /// The maximum length of the pending connections queue.
         /// </summary>
-        public uint Backlog { get => _backlog; set => _backlog = value; }
+        public int Backlog { get => backlog; set => backlog = value; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SocketServer" /> class.
         /// </summary>
         private SocketServer()
         {
-            _socketClients = new List<Socket>();
-            OnOpen = null;
+            SocketClients = new List<Socket>();
+            onOpen = null;
+            OnData = null;
         }
 
         /// <summary>
         ///Initializes a new instance of the <see cref="SocketServer" /> class using specified port.
         /// </summary>
         /// <param name="port">The socket server port.</param>
-        public SocketServer(uint port = 7788) : this()
+        public SocketServer(int port = 7788) : this()
         {
-            _port = port;
+            this.port = port;
 
-            _socket = new Socket(_addressFamily, _socketType, _protocolType);
+            socket = new Socket(addressFamily, socketType, protocolType);
         }
 
         /// <summary>
@@ -60,11 +71,11 @@ namespace GodSharp
         /// <param name="addressFamily">The address family of the <see cref="T:Socket" />.</param>
         /// <param name="socketType">The type of the <see cref="T:Socket" />.</param>
         /// <param name="protocolType">The protocol type of the <see cref="T:Socket" />.</param>
-        public SocketServer(string host = null, uint port = 7788, uint backlog = 1024, AddressFamily addressFamily = AddressFamily.InterNetwork, SocketType socketType = SocketType.Stream, ProtocolType protocolType = ProtocolType.Tcp) : this()
+        public SocketServer(string host = null, int port = 7788, int backlog = 1024, AddressFamily addressFamily = AddressFamily.InterNetwork, SocketType socketType = SocketType.Stream, ProtocolType protocolType = ProtocolType.Tcp) : this()
         {
             if (!string.IsNullOrEmpty(host))
             {
-                bool flag = IPAddress.TryParse(host, out IPAddress ip);
+                bool flag = IPAddress.TryParse(host, out IPAddress _);
 
                 if (!flag)
                 {
@@ -76,14 +87,14 @@ namespace GodSharp
                 host = null;
             }
 
-            _host = host ?? _host;
-            _port = port;
-            _backlog = backlog;
-            _addressFamily = addressFamily;
-            _socketType = socketType;
-            _protocolType = protocolType;
+            this.host = host ?? this.host;
+            this.port = port;
+            this.backlog = backlog;
+            this.addressFamily = addressFamily;
+            this.socketType = socketType;
+            this.protocolType = protocolType;
 
-            _socket = new Socket(_addressFamily, _socketType, _protocolType);
+            socket = new Socket(this.addressFamily, this.socketType, this.protocolType);
         }
 
         /// <summary>
@@ -94,15 +105,15 @@ namespace GodSharp
         /// <param name="addressFamily">The address family of the <see cref="T:Socket" />.</param>
         /// <param name="socketType">The type of the <see cref="T:Socket" />.</param>
         /// <param name="protocolType">The protocol type of the <see cref="T:Socket" />.</param>
-        public SocketServer(uint port = 7788, uint backlog = 1024, AddressFamily addressFamily = AddressFamily.InterNetwork, SocketType socketType = SocketType.Stream, ProtocolType protocolType = ProtocolType.Tcp) : this()
+        public SocketServer(int port = 7788, int backlog = 1024, AddressFamily addressFamily = AddressFamily.InterNetwork, SocketType socketType = SocketType.Stream, ProtocolType protocolType = ProtocolType.Tcp) : this()
         {
-            _port = port;
-            _backlog = backlog;
-            _addressFamily = addressFamily;
-            _socketType = socketType;
-            _protocolType = protocolType;
+            this.port = port;
+            this.backlog = backlog;
+            this.addressFamily = addressFamily;
+            this.socketType = socketType;
+            this.protocolType = protocolType;
 
-            _socket = new Socket(_addressFamily, _socketType, _protocolType);
+            socket = new Socket(this.addressFamily, this.socketType, this.protocolType);
         }
 
         /// <summary>
@@ -113,10 +124,10 @@ namespace GodSharp
         /// <param name="protocolType">The protocol type of the <see cref="T:Socket" />.</param>
         public SocketServer(AddressFamily addressFamily = AddressFamily.InterNetwork, SocketType socketType = SocketType.Stream, ProtocolType protocolType = ProtocolType.Tcp)
         {
-            _addressFamily = addressFamily;
-            _socketType = socketType;
-            _protocolType = protocolType;
-            _socket = new Socket(_addressFamily, _socketType, _protocolType);
+            this.addressFamily = addressFamily;
+            this.socketType = socketType;
+            this.protocolType = protocolType;
+            socket = new Socket(this.addressFamily, this.socketType, this.protocolType);
         }
 
         /// <summary>
@@ -131,7 +142,7 @@ namespace GodSharp
         /// <returns>A <see cref="T:System.Net.Sockets.Socket" /> for a newly created connection.</returns>
         public Socket Accept()
         {
-            return _socket.Accept();
+            return socket.Accept();
         }
 
         /// <summary>Begins an asynchronous operation to accept an incoming connection attempt.</summary>
@@ -140,7 +151,7 @@ namespace GodSharp
         public bool AcceptAsync(SocketAsyncEventArgs e)
         {
 
-            return _socket.AcceptAsync(e);
+            return socket.AcceptAsync(e);
         }
 
         /// <summary>Begins an asynchronous operation to accept an incoming connection attempt.</summary>
@@ -149,7 +160,7 @@ namespace GodSharp
         /// <param name="state">An object that contains state information for this request. </param>
         public IAsyncResult BeginAccept(AsyncCallback callback, object state)
         {
-            return _socket.BeginAccept(callback, state);
+            return socket.BeginAccept(callback, state);
         }
 
         /// <summary>Begins an asynchronous operation to accept an incoming connection attempt and receives the first block of data sent by the client application.</summary>
@@ -159,7 +170,7 @@ namespace GodSharp
         /// <param name="state">An object that contains state information for this request. </param>
         public IAsyncResult BeginAccept(int receiveSize, AsyncCallback callback, object state)
         {
-            return _socket.BeginAccept(receiveSize, callback, state);
+            return socket.BeginAccept(receiveSize, callback, state);
         }
 
         /// <summary>Begins an asynchronous operation to accept an incoming connection attempt from a specified socket and receives the first block of data sent by the client application.</summary>
@@ -170,7 +181,7 @@ namespace GodSharp
         /// <param name="state">An object that contains state information for this request. </param>
         public IAsyncResult BeginAccept(Socket acceptSocket, int receiveSize, AsyncCallback callback, object state)
         {
-            return _socket.BeginAccept(acceptSocket, receiveSize, callback, state);
+            return socket.BeginAccept(acceptSocket, receiveSize, callback, state);
         }
 
         /// <summary>Asynchronously accepts an incoming connection attempt and creates a new <see cref="T:System.Net.Sockets.Socket" /> to handle remote host communication.</summary>
@@ -178,7 +189,7 @@ namespace GodSharp
         /// <param name="asyncResult">An <see cref="T:System.IAsyncResult" /> that stores state information for this asynchronous operation as well as any user defined data. </param>
         public Socket EndAccept(IAsyncResult asyncResult)
         {
-            return _socket.EndAccept(asyncResult);
+            return socket.EndAccept(asyncResult);
         }
 
         /// <summary>Asynchronously accepts an incoming connection attempt and creates a new <see cref="T:System.Net.Sockets.Socket" /> object to handle remote host communication. This method returns a buffer that contains the initial data transferred.</summary>
@@ -187,7 +198,7 @@ namespace GodSharp
         /// <param name="asyncResult">An <see cref="T:System.IAsyncResult" /> object that stores state information for this asynchronous operation as well as any user defined data. </param>
         public Socket EndAccept(out byte[] buffer, IAsyncResult asyncResult)
         {
-            return _socket.EndAccept(out buffer, asyncResult);
+            return socket.EndAccept(out buffer, asyncResult);
         }
 
         /// <summary>Asynchronously accepts an incoming connection attempt and creates a new <see cref="T:System.Net.Sockets.Socket" /> object to handle remote host communication. This method returns a buffer that contains the initial data and the number of bytes transferred.</summary>
@@ -197,14 +208,15 @@ namespace GodSharp
         /// <param name="asyncResult">An <see cref="T:System.IAsyncResult" /> object that stores state information for this asynchronous operation as well as any user defined data. </param>
         public Socket EndAccept(out byte[] buffer, out int bytesTransferred, IAsyncResult asyncResult)
         {
-            return _socket.EndAccept(out buffer, out bytesTransferred, asyncResult);
+            return socket.EndAccept(out buffer, out bytesTransferred, asyncResult);
         }
 
         /// <summary>Places a <see cref="T:System.Net.Sockets.Socket" /> in a listening state.</summary>
         /// <param name="backlog">The maximum length of the pending connections queue. </param>
+        // ReSharper disable once ParameterHidesMember
         public void Listen(int backlog)
         {
-            _socket.Listen(backlog);
+            socket.Listen(backlog);
         }
 
         /// <summary>Releases the unmanaged resources used by the <see cref="SocketServer" />, and optionally disposes of the managed resources.</summary>
@@ -223,12 +235,12 @@ namespace GodSharp
                 // Releases managed resources,like xxx.Dispose();
             }
             // Releases managed resources
-            if (_threadHandle != null && _threadHandle.ThreadState == System.Threading.ThreadState.Running)
+            if (threadHandle != null && threadHandle.ThreadState == ThreadState.Running)
             {
                 try
                 {
-                    _threadHandle.Abort();
-                    _threadHandle = null;
+                    threadHandle.Abort();
+                    threadHandle = null;
                 }
                 catch (Exception ex)
                 {
@@ -236,14 +248,13 @@ namespace GodSharp
                 }
             }
 
-            if (_socket != null)
+            if (socket != null)
             {
                 try
                 {
-                    _socket.Shutdown(SocketShutdown.Both);
-                    _socket.Disconnect(false);
-                    _socket.Close();
-                    _socket = null;
+                    socket.Shutdown(SocketShutdown.Both);
+                    socket.Disconnect(false);
+                    socket.Close();
                 }
                 catch (Exception ex)
                 {
@@ -259,10 +270,10 @@ namespace GodSharp
         {
             try
             {
-                IPAddress ip = string.IsNullOrEmpty(_host) ? IPAddress.Any : IPAddress.Parse(_host);
+                IPAddress ip = string.IsNullOrEmpty(host) ? IPAddress.Any : IPAddress.Parse(host);
 
-                _socket.Bind(new IPEndPoint(ip, (int)_port));
-                _socket.Listen((int)_backlog);
+                socket.Bind(new IPEndPoint(ip, port));
+                socket.Listen(backlog);
             }
             catch (Exception e)
             {
@@ -279,23 +290,23 @@ namespace GodSharp
             {
                 Init();
 
-                if (_threadHandle != null)
+                if (threadHandle != null)
                 {
                     return;
                 }
 
-                _threadHandle = new Thread(new ThreadStart(Loop))
+                threadHandle = new Thread(Loop)
                 {
                     IsBackground = true
                 };
-                _threadHandle.Start();
+                threadHandle.Start();
 
-                Console.WriteLine($"Socket server {_socket.LocalEndPoint.ToString()} started.");
+                Console.WriteLine($"Socket server {socket.LocalEndPoint} started.");
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                throw ex;
+                throw new Exception(ex.Message,ex);
             }
         }
 
@@ -305,16 +316,16 @@ namespace GodSharp
         /// </summary>
         internal void Loop()
         {
-            while (_loopFlag)
+            while (loopFlag)
             {
                 try
                 {
-                    Socket socket = _socket.Accept();
-                    Thread processThread = new Thread(new ParameterizedThreadStart(ProcessConnection))
+                    Socket sock = this.socket.Accept();
+                    Thread processThread = new Thread(ProcessConnection)
                     {
                         IsBackground = true
                     };
-                    processThread.Start(socket);
+                    processThread.Start(sock);
                     Thread.Sleep(10);
                 }
                 catch (Exception e)
@@ -323,7 +334,7 @@ namespace GodSharp
                 }
             }
 
-            this._status = SocketStatus.Stop;
+            this.status = SocketStatus.Stop;
         }
 
         /// <summary>
@@ -334,32 +345,32 @@ namespace GodSharp
         {
             try
             {
-                Socket socket = s as Socket;
-                if (socket == null)
+                Socket sock = s as Socket;
+                if (sock == null)
                 {
                     return;
                 }
-                if (!socket.Connected)
+                if (!sock.Connected)
                 {
-                    Console.WriteLine($"Client {socket.RemoteEndPoint.ToString()} not connected to server.");
+                    Console.WriteLine($"Client {sock.RemoteEndPoint} not connected to server.");
                     return;
                 }
 
-                Console.WriteLine($"Client {socket.RemoteEndPoint.ToString()} connected to server.");
+                Console.WriteLine($"Client {sock.RemoteEndPoint} connected to server.");
 
-                if (_socketClients.Contains(socket))
+                if (SocketClients.Contains(sock))
                 {
                     return;
                 }
-                _socketClients.Add(socket);
+                SocketClients.Add(sock);
 
-                Thread thread = new Thread(new ParameterizedThreadStart(ProcessDatas))
+                Thread thread = new Thread(ProcessDatas)
                 {
                     IsBackground = true
                 };
-                thread.Start(socket);
+                thread.Start(sock);
 
-                this.onOpen?.Invoke(socket);
+                this.onOpen?.Invoke(sock);
             }
             catch (Exception e)
             {
@@ -370,32 +381,36 @@ namespace GodSharp
         /// <summary>
         /// Polling method for processing data.
         /// </summary>
+        [SuppressMessage("ReSharper", "RedundantAssignment")]
         private void ProcessDatas(object s)
         {
-            Socket socket = s as Socket;
-            if (socket == null)
+            Socket sock = s as Socket;
+            if (sock == null)
             {
                 return;
             }
             //socket.ReceiveTimeout = 100;
             try
             {
+                // ReSharper disable once TooWideLocalVariableScope
                 byte[] data;
-                SocketResult result;
+                // ReSharper disable once TooWideLocalVariableScope
+                SocketResult<SocketServer> result;
+                // ReSharper disable once TooWideLocalVariableScope
                 int length;
-                while (_loopFlag && socket.Poll(-1, SelectMode.SelectRead))
+                while (loopFlag && sock.Poll(-1, SelectMode.SelectRead))
                 {
                     length = -1;
                     data = new byte[1024];
 
                     try
                     {
-                        length = socket.Receive(data);
+                        length = sock.Receive(data);
 
                         if (length < 1)
                         {
-                            this._socketClients.Remove(socket);
-                            Console.WriteLine($"Client {socket.RemoteEndPoint.ToString()} offline.");
+                            this.SocketClients.Remove(sock);
+                            Console.WriteLine($"Client {sock.RemoteEndPoint} offline.");
                             break;
                         }
 
@@ -403,9 +418,10 @@ namespace GodSharp
                         Buffer.BlockCopy(data, 0, tmp, 0, length);
 
                         result = null;
-                        result = new SocketResult() { Socket = socket, Bytes = tmp };
+                        this.RemoteEndPoint = sock.RemoteEndPoint;
+                        result = new SocketResult<SocketServer>() { Socket = this, Bytes = tmp , OnData = OnData};
 
-                        Thread processThread = new Thread(ProcessData)
+                        Thread processThread = new Thread(ProcessData<SocketServer>)
                         {
                             IsBackground = true
                         };
@@ -416,8 +432,8 @@ namespace GodSharp
                         Console.WriteLine(ex.Message);
                         if (ex.SocketErrorCode == SocketError.ConnectionReset || ex.SocketErrorCode == SocketError.ConnectionAborted)
                         {
-                            this._socketClients.Remove(socket);
-                            Console.WriteLine($"Client {socket.RemoteEndPoint.ToString()} offline.");
+                            this.SocketClients.Remove(sock);
+                            Console.WriteLine($"Client {sock.RemoteEndPoint} offline.");
                             break;
                         }
                     }
@@ -435,7 +451,7 @@ namespace GodSharp
                 Console.WriteLine(e);
             }
 
-            this._status = SocketStatus.Stop;
+            this.status = SocketStatus.Stop;
         }
     }
 }

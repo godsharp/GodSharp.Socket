@@ -1,10 +1,11 @@
-﻿using System.Net.Sockets;
+﻿using System;
 
 namespace GodSharp.Protocol
 {
-    public class SocketResult
+    public class SocketResult<T> where T: SocketBase
     {
-        public Socket Socket { get; set; }
+        public T Socket { get; set; }
         public byte[] Bytes { get; set; }
+        public Action<T, byte[]> OnData { get; set; }
     }
 }

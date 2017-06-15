@@ -12,23 +12,23 @@ static void Main()
 {
     SocketServer server = new SocketServer(7788)
     {
-	OnOpen = (socket) =>
-	{
-	    Console.WriteLine($"Client {socket.RemoteEndPoint.ToString()} connecte {socket.Connected}");
-	}
+		OnOpen = (socket) =>
+		{
+			Console.WriteLine($"Client {socket.RemoteEndPoint.ToString()} connecte {socket.Connected}");
+		}
     };
 
     server.OnData = (socket, data) =>
     {
-	//get client data
-	string message = server.Encoding.GetString(data, 0, data.Length);
-	Console.WriteLine($"server received data from {socket.LocalEndPoint}£º{message}");
+        //get client data
+        string message = server.Encoding.GetString(data, 0, data.Length);
+        Console.WriteLine($"server received data from {socket.LocalEndPoint}£º{message}");
 
-	message = "server repley " + message;
+        message = "server repley " + message;
 
-	socket.Send(message);
+        socket.Send(message);
 
-	Console.WriteLine($"server send data to {socket.LocalEndPoint}£º{message}");
+        Console.WriteLine($"server send data to {socket.LocalEndPoint}£º{message}");
     };
 
     server.Start();
@@ -46,9 +46,9 @@ static void Main()
 
     client.OnData = (socket, data) =>
     {
-	//get server data
-	string message = client.Encoding.GetString(data, 0, data.Length);
-	Console.WriteLine($"client received data from {socket.RemoteEndPoint.ToString()}: {message}");
+		//get server data
+		string message = client.Encoding.GetString(data, 0, data.Length);
+		Console.WriteLine($"client received data from {socket.RemoteEndPoint.ToString()}: {message}");
     };
     client.Connect();
 
@@ -58,9 +58,9 @@ static void Main()
 
     while (msg.ToLower() != "q")
     {
-	client.Send(msg);
-	Console.WriteLine($"client send data to {client.RemoteEndPoint.ToString()}: {msg}");
-	msg = Console.ReadLine();
+		client.Send(msg);
+		Console.WriteLine($"client send data to {client.RemoteEndPoint.ToString()}: {msg}");
+		msg = Console.ReadLine();
     }
 }
 ```
