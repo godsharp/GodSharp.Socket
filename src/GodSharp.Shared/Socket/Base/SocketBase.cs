@@ -4,11 +4,10 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using GodSharp.Protocol;
 // ReSharper disable ArrangeThisQualifier
 // ReSharper disable InconsistentNaming
 
-namespace GodSharp
+namespace GodSharp.Sockets
 {
     public abstract class SocketBase
     {
@@ -246,14 +245,14 @@ namespace GodSharp
         /// <summary>Closes the <see cref="T:System.Net.Sockets.Socket" /> connection and releases all associated resources.</summary>
         public void Close()
         {
-            socket.Close();
+            socket?.Close();
         }
 
         /// <summary>Closes the <see cref="T:System.Net.Sockets.Socket" /> connection and releases all associated resources with a specified timeout to allow queued data to be sent. </summary>
         /// <param name="timeout">Wait up to <paramref name="timeout" /> seconds to send any remaining data, then close the socket.</param>
         public void Close(int timeout)
         {
-            socket.Close(timeout);
+            socket?.Close(timeout);
         }
 
         /// <summary>Ends a pending asynchronous read.</summary>
@@ -762,12 +761,15 @@ namespace GodSharp
             try
             {
                 loopFlag = false;
+                
+                socket?.Close();
+
                 while (this.status == SocketStatus.Runing)
                 {
                     Thread.Sleep(100);
                 }
-
-                if (threadHandle.ThreadState != ThreadState.Stopped)
+                
+                if (threadHandle.IsAlive || threadHandle.ThreadState != ThreadState.Stopped)
                 {
                     threadHandle.Abort();
                     threadHandle = null;

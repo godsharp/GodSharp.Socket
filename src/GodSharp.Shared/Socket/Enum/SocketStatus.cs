@@ -1,4 +1,4 @@
-﻿namespace GodSharp
+﻿namespace GodSharp.Sockets
 {
     /// <summary>
     /// socket server status

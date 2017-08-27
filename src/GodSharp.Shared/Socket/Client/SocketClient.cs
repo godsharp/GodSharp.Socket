@@ -1,12 +1,11 @@
-﻿using GodSharp.Protocol;
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 // ReSharper disable ArrangeThisQualifier
 
-namespace GodSharp
+namespace GodSharp.Sockets
 {
     public class SocketClient : SocketBase, IDisposable
     {

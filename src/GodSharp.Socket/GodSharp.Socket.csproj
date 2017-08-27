@@ -7,7 +7,7 @@
     <ProjectGuid>{877E1AA2-7EAE-40FC-AB49-C52262F09D9D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GodSharp</RootNamespace>
+    <RootNamespace>GodSharp.Sockets</RootNamespace>
     <AssemblyName>GodSharp.Socket</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\Dest\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -34,25 +34,23 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\GodSharp.Shared\Socket\Base\SocketBase.cs">
-      <Link>Base\SocketBase.cs</Link>
-    </Compile>
-    <Compile Include="..\GodSharp.Shared\Socket\Base\SocketExtension.cs">
-      <Link>Base\SocketExtension.cs</Link>
-    </Compile>
-    <Compile Include="..\GodSharp.Shared\Socket\Base\SocketResult.cs">
-      <Link>Base\SocketResult.cs</Link>
-    </Compile>
-    <Compile Include="..\GodSharp.Shared\Socket\Client\SocketClient.cs">
-      <Link>Client\SocketClient.cs</Link>
-    </Compile>
-    <Compile Include="..\GodSharp.Shared\Socket\Enum\SocketStatus.cs">
-      <Link>Enum\SocketStatus.cs</Link>
-    </Compile>
-    <Compile Include="..\GodSharp.Shared\Socket\Server\SocketServer.cs">
-      <Link>Server\SocketServer.cs</Link>
-    </Compile>
+    <Compile Include="Internal\Listener.cs" />
+    <Compile Include="Base\Sender.cs" />
+    <Compile Include="Base\SocketBase.cs" />
+    <Compile Include="Base\SocketClientCollection.cs" />
+    <Compile Include="Client\SocketClient.Async.cs" />
+    <Compile Include="Client\SocketClient.cs" />
+    <Compile Include="Internal\Extension\EndPointExtension.cs" />
+    <Compile Include="Internal\Extension\SocketExtension.cs" />
+    <Compile Include="Internal\Utils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Server\SocketServer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Enum\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Server\SocketServer.Async.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

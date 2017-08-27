@@ -4,7 +4,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Linq;
 
-namespace GodSharp
+namespace GodSharp.Sockets
 {
     public static class SocketExtension
     {

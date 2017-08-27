@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GodSharp.Protocol
+namespace GodSharp.Sockets
 {
     public class SocketResult<T> where T: SocketBase
     {

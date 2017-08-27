@@ -1,5 +1,4 @@
-﻿using GodSharp.Protocol;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
@@ -7,7 +6,7 @@ using System.Net.Sockets;
 using System.Threading;
 // ReSharper disable ArrangeThisQualifier
 
-namespace GodSharp
+namespace GodSharp.Sockets
 {
     public class SocketServer : SocketBase, IDisposable
     {
@@ -19,6 +18,7 @@ namespace GodSharp
         /// The client list.
         /// </summary>
         internal List<Socket> SocketClients;
+        public Dictionary<KeyValuePair<string,int>,Socket> clients;
 
         /// <summary>
         /// The execute method when client connected.
@@ -47,6 +47,7 @@ namespace GodSharp
         private SocketServer()
         {
             SocketClients = new List<Socket>();
+            clients = new Dictionary<KeyValuePair<string, int>, Socket>();
             onOpen = null;
             OnData = null;
         }
@@ -289,7 +290,7 @@ namespace GodSharp
             try
             {
                 Init();
-
+                
                 if (threadHandle != null)
                 {
                     return;
@@ -309,8 +310,7 @@ namespace GodSharp
                 throw new Exception(ex.Message,ex);
             }
         }
-
-
+        
         /// <summary>
         /// Polling method.
         /// </summary>
@@ -358,11 +358,14 @@ namespace GodSharp
 
                 Console.WriteLine($"Client {sock.RemoteEndPoint} connected to server.");
 
-                if (SocketClients.Contains(sock))
+                IPEndPoint iPEnd = sock.RemoteEndPoint as IPEndPoint;
+                KeyValuePair<string, int> k = new KeyValuePair<string, int>(iPEnd.Address.ToString(), iPEnd.Port);
+                
+                if (clients.ContainsKey(k))
                 {
                     return;
                 }
-                SocketClients.Add(sock);
+                clients.Add(k,sock);
 
                 Thread thread = new Thread(ProcessDatas)
                 {
@@ -419,7 +422,7 @@ namespace GodSharp
 
                         result = null;
                         this.RemoteEndPoint = sock.RemoteEndPoint;
-                        result = new SocketResult<SocketServer>() { Socket = this, Bytes = tmp , OnData = OnData};
+                        result = new SocketResult<SocketServer>() { Socket = this, Bytes = tmp, OnData = OnData };
 
                         Thread processThread = new Thread(ProcessData<SocketServer>)
                         {
@@ -432,7 +435,10 @@ namespace GodSharp
                         Console.WriteLine(ex.Message);
                         if (ex.SocketErrorCode == SocketError.ConnectionReset || ex.SocketErrorCode == SocketError.ConnectionAborted)
                         {
-                            this.SocketClients.Remove(sock);
+                            IPEndPoint iPEnd = sock.RemoteEndPoint as IPEndPoint;
+                            KeyValuePair<string, int> k = new KeyValuePair<string, int>(iPEnd.Address.ToString(), iPEnd.Port);
+                            this.clients.Remove(k);
+                            //this.SocketClients.Remove(sock);
                             Console.WriteLine($"Client {sock.RemoteEndPoint} offline.");
                             break;
                         }
@@ -452,6 +458,32 @@ namespace GodSharp
             }
 
             this.status = SocketStatus.Stop;
+        }
+
+        /// <summary>
+        /// Gets the <see cref="Socket"/> with the specified host.
+        /// </summary>
+        /// <value>
+        /// The <see cref="Socket"/>.
+        /// </value>
+        /// <param name="host">The host.</param>
+        /// <param name="port">The port.</param>
+        /// <returns></returns>
+        public Socket this[string host,int port]
+        {
+            get
+            {
+                KeyValuePair<string, int> k = new KeyValuePair<string, int>(host, port);
+
+                if (clients?.ContainsKey(k) ==true)
+                {
+                    return clients[k];
+                }
+                else
+                {
+                    return null;
+                }
+            }
         }
     }
 }

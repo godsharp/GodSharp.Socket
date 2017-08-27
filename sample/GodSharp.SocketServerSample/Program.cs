@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GodSharp.Sockets;
+using System;
+using System.Threading;
 
 namespace GodSharp.SocketServerSample
 {
@@ -6,11 +8,12 @@ namespace GodSharp.SocketServerSample
     {
         static void Main()
         {
-            SocketServer server = new SocketServer(7788)
+            Random random = new Random();
+            SocketServer server = new SocketServer(port:7788)
             {
-                OnOpen = (socket) =>
+                OnConnected = (socket) =>
                 {
-                    Console.WriteLine($"Client {socket.RemoteEndPoint.ToString()} connecte {socket.Connected}");
+                    Console.WriteLine($"Client {socket.RemoteEndPoint.ToString()} connected");
                 }
             };
 
@@ -18,13 +21,13 @@ namespace GodSharp.SocketServerSample
             {
                 //get client data
                 string message = server.Encoding.GetString(data, 0, data.Length);
-                Console.WriteLine($"server received data from {socket.LocalEndPoint}：{message}");
+                Console.WriteLine($"server received data from {socket.RemoteEndPoint}：{message}");
 
-                message = "server repley " + message;
-
+                //message = "server repley " + message;
+                message = random.Next(100000000, 999999999).ToString();
                 socket.Send(message);
 
-                Console.WriteLine($"server send data to {socket.LocalEndPoint}：{message}");
+                Console.WriteLine($"server send data to {socket.RemoteEndPoint}：{message}");
 
                 //using (NetworkStream ns = new NetworkStream(client))
                 //{
@@ -52,7 +55,23 @@ namespace GodSharp.SocketServerSample
                 //}
             };
 
+            server.Listen();
             server.Start();
+
+            //while (true)
+            //{
+            //    if (server.clients?.Count>0)
+            //    {
+            //        string data = random.Next(100000000, 999999999).ToString();
+
+            //        foreach (var item in server.clients)
+            //        {
+            //            item.Value.Send(data);
+            //        }
+            //    }
+
+            //    Thread.Sleep(1000);
+            //}
 
             Console.ReadKey();
         }

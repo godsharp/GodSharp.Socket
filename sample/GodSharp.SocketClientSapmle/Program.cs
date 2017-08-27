@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GodSharp.Sockets;
+using System;
 
 namespace GodSharp.SocketClientSapmle
 {
@@ -7,6 +8,7 @@ namespace GodSharp.SocketClientSapmle
         static void Main()
         {
             Console.ReadKey();
+
             SocketClient client = new SocketClient("127.0.0.1", 12307);
 
             client.OnData = (socket, data) =>
@@ -15,6 +17,7 @@ namespace GodSharp.SocketClientSapmle
                 string message = client.Encoding.GetString(data, 0, data.Length);
                 Console.WriteLine($"client received data from {socket.RemoteEndPoint.ToString()}: {message}");
             };
+
             client.Connect();
 
             client.Start();
@@ -23,7 +26,7 @@ namespace GodSharp.SocketClientSapmle
 
             while (msg.ToLower() != "q")
             {
-                client.Send(msg);
+                client.Sender.Send(msg);
                 Console.WriteLine($"client send data to {client.RemoteEndPoint.ToString()}: {msg}");
                 msg = Console.ReadLine();
             }
