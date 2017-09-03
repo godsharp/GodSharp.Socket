@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace GodSharp.Sockets.Internal
+namespace GodSharp.Sockets.Internal.Util
 {
     public class Utils
     {

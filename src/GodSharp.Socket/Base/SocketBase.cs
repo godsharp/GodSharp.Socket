@@ -1,4 +1,4 @@
-﻿using GodSharp.Sockets.Internal;
+﻿using GodSharp.Sockets.Internal.Util;
 using System;
 using System.Net.Sockets;
 using System.Text;

@@ -139,6 +139,7 @@ namespace GodSharp.Sockets
             if (Connected)
             {
                 Socket.Shutdown(SocketShutdown.Both);
+                Socket.Disconnect(false);
                 Socket.Close();
             }
 
@@ -219,6 +220,7 @@ namespace GodSharp.Sockets
                 if (Socket?.Connected==true)
                 {
                     Socket.Shutdown(SocketShutdown.Both);
+                    Socket.Disconnect(true);
                     Socket.Close(); 
                 }
 

@@ -1,21 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.6
+VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2D285DE6-8FC0-4FB6-A438-EA2AD5FEA561}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{8FBE10AE-EA57-4187-8A12-956A2D5FFB9E}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{D2FB2A10-BA9D-41F8-9D8F-9F8945F39FA6}"
-EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "GodSharp.Shared", "src\GodSharp.Shared\GodSharp.Shared.shproj", "{C4F34D2A-0CBA-4568-9C62-11C5F41225B0}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".NET Framework", ".NET Framework", "{55968B99-6008-4DCF-AC57-33F17ABCFA71}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodSharp.SocketClientSapmle", "sample\GodSharp.SocketClientSapmle\GodSharp.SocketClientSapmle.csproj", "{DA03E415-51BC-4223-B8C8-E2ABFF1F77AF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodSharp.SocketServerSample", "sample\GodSharp.SocketServerSample\GodSharp.SocketServerSample.csproj", "{8F3CAA2A-6DC3-46D5-ABE6-3850F29FFF75}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodSharp.Socket", "src\GodSharp.Socket\GodSharp.Socket.csproj", "{877E1AA2-7EAE-40FC-AB49-C52262F09D9D}"
 EndProject
@@ -27,25 +17,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".NET Core", ".NET Core", "{176C3CFF-FDFE-4487-8E48-F0A675458154}"
-EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		src\GodSharp.Shared\GodSharp.Shared.projitems*{c4f34d2a-0cba-4568-9c62-11c5f41225b0}*SharedItemsImports = 13
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{DA03E415-51BC-4223-B8C8-E2ABFF1F77AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DA03E415-51BC-4223-B8C8-E2ABFF1F77AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DA03E415-51BC-4223-B8C8-E2ABFF1F77AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DA03E415-51BC-4223-B8C8-E2ABFF1F77AF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8F3CAA2A-6DC3-46D5-ABE6-3850F29FFF75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8F3CAA2A-6DC3-46D5-ABE6-3850F29FFF75}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8F3CAA2A-6DC3-46D5-ABE6-3850F29FFF75}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8F3CAA2A-6DC3-46D5-ABE6-3850F29FFF75}.Release|Any CPU.Build.0 = Release|Any CPU
 		{877E1AA2-7EAE-40FC-AB49-C52262F09D9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{877E1AA2-7EAE-40FC-AB49-C52262F09D9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{877E1AA2-7EAE-40FC-AB49-C52262F09D9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -56,11 +33,9 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D2FB2A10-BA9D-41F8-9D8F-9F8945F39FA6} = {2D285DE6-8FC0-4FB6-A438-EA2AD5FEA561}
-		{C4F34D2A-0CBA-4568-9C62-11C5F41225B0} = {D2FB2A10-BA9D-41F8-9D8F-9F8945F39FA6}
-		{55968B99-6008-4DCF-AC57-33F17ABCFA71} = {8FBE10AE-EA57-4187-8A12-956A2D5FFB9E}
-		{DA03E415-51BC-4223-B8C8-E2ABFF1F77AF} = {55968B99-6008-4DCF-AC57-33F17ABCFA71}
-		{8F3CAA2A-6DC3-46D5-ABE6-3850F29FFF75} = {55968B99-6008-4DCF-AC57-33F17ABCFA71}
 		{877E1AA2-7EAE-40FC-AB49-C52262F09D9D} = {2D285DE6-8FC0-4FB6-A438-EA2AD5FEA561}
-		{176C3CFF-FDFE-4487-8E48-F0A675458154} = {8FBE10AE-EA57-4187-8A12-956A2D5FFB9E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {68DFC265-6267-4153-8375-A35F8E5CD820}
 	EndGlobalSection
 EndGlobal

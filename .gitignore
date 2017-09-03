@@ -237,3 +237,6 @@ _Pvt_Extensions
 
 # Custom
 src/GodSharp.*/pack.bat
+/sample
+/src/GodSharp.Socket/Internal/Listener/ListenerCollection.cs
+/src/GodSharp.Socket/Base/SenderCollection.cs

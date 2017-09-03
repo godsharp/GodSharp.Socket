@@ -12,9 +12,17 @@ namespace GodSharp.Sockets
     /// </summary>
     public partial class SocketServer:SocketBase
     {
-        private Dictionary<Guid, Listener> listeners = null;
-        private Dictionary<string, Guid> clientMap = null;
+        private Dictionary<Guid, Listener> listeners;
+        private Dictionary<string, Guid> clientMap;
         private List<Sender> clients;
+
+        /// <summary>
+        /// Gets the items.
+        /// </summary>
+        /// <value>
+        /// The items.
+        /// </value>
+        //public SenderCollection Items { get; private set; }
 
         /// <summary>
         /// Gets the clients.
@@ -145,7 +153,7 @@ namespace GodSharp.Sockets
             {
                 item.Value?.Stop();
             }
-
+            
             clients.Clear();
             clientMap.Clear();
             listeners.Clear();
@@ -173,6 +181,7 @@ namespace GodSharp.Sockets
             Running = true;
             listeners = new Dictionary<Guid, Listener>();
             clientMap = new Dictionary<string, Guid>();
+            clients = new List<Sender>();
 
             while (Running)
             {
@@ -220,7 +229,7 @@ namespace GodSharp.Sockets
         /// <param name="sender">The sender.</param>
         private void OnClosedFun(Sender sender)
         {
-            string id = $"{sender.LocalEndPoint.GetHost()}:{sender.LocalEndPoint}";
+            string id = $"{sender.LocalEndPoint.GetHost()}:{sender.LocalEndPoint.GetPort()}";
 
             if (this.clientMap.ContainsKey(id))
             {

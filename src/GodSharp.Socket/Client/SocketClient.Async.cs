@@ -1,11 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Net.Sockets;
 
-namespace GodSharp.Sockets.Client
+namespace GodSharp.Sockets
 {
     public partial class SocketClient
     {
+        /// <summary>
+        /// Connects this instance.
+        /// </summary>
+        public void ConnectAsync(SocketAsyncEventArgs e)
+        {
+            if (Connected)
+            {
+                return;
+            }
+
+            socket.ConnectAsync(e);
+
+            SetOnConnectedFun();
+        }
     }
 }
