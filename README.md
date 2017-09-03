@@ -10,27 +10,29 @@ A easy to use socket server and client for .NET.
 ```
 static void Main()
 {
-    SocketServer server = new SocketServer(7788)
+    Random random = new Random();
+    SocketServer server = new SocketServer(port:7788)
     {
-		OnOpen = (socket) =>
-		{
-			Console.WriteLine($"Client {socket.RemoteEndPoint.ToString()} connecte {socket.Connected}");
-		}
+        OnConnected = (sender) =>
+        {
+            Console.WriteLine($"Client {sender.RemoteEndPoint.ToString()} connected");
+        }
     };
 
-    server.OnData = (socket, data) =>
+    server.OnData = (sender, data) =>
     {
         //get client data
         string message = server.Encoding.GetString(data, 0, data.Length);
-        Console.WriteLine($"server received data from {socket.LocalEndPoint}£º{message}");
+        Console.WriteLine($"server received data from {sender.RemoteEndPoint}£º{message}");
 
-        message = "server repley " + message;
+        //message = "server repley " + message;
+        message = random.Next(100000000, 999999999).ToString();
+        sender.Send(message);
 
-        socket.Send(message);
-
-        Console.WriteLine($"server send data to {socket.LocalEndPoint}£º{message}");
+        Console.WriteLine($"server send data to {sender.RemoteEndPoint}£º{message}");
     };
 
+    server.Listen();
     server.Start();
 
     Console.ReadKey();
@@ -42,14 +44,17 @@ static void Main()
 ```
 static void Main()
 {
+    Console.ReadKey();
+
     SocketClient client = new SocketClient("127.0.0.1", 7788);
 
-    client.OnData = (socket, data) =>
+    client.OnData = (sender, data) =>
     {
-		//get server data
-		string message = client.Encoding.GetString(data, 0, data.Length);
-		Console.WriteLine($"client received data from {socket.RemoteEndPoint.ToString()}: {message}");
+        //get server data
+        string message = client.Encoding.GetString(data, 0, data.Length);
+        Console.WriteLine($"client received data from {sender.RemoteEndPoint.ToString()}: {message}");
     };
+
     client.Connect();
 
     client.Start();
@@ -58,13 +63,12 @@ static void Main()
 
     while (msg.ToLower() != "q")
     {
-		client.Send(msg);
-		Console.WriteLine($"client send data to {client.RemoteEndPoint.ToString()}: {msg}");
-		msg = Console.ReadLine();
+        client.Sender.Send(msg);
+        Console.WriteLine($"client send data to {client.RemoteEndPoint.ToString()}: {msg}");
+        msg = Console.ReadLine();
     }
 }
 ```
 
 # Todo
-- Fix server send data to specified client.
-- Get client list.
+support async
