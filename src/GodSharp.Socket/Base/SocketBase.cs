@@ -124,5 +124,30 @@ namespace GodSharp.Sockets
                 throw ex;
             }
         }
+
+        /// <summary>
+        /// Checks the host and port.
+        /// </summary>
+        /// <exception cref="System.Exception">
+        /// Host is incorrect
+        /// or
+        /// Port is incorrect
+        /// </exception>
+        protected void CheckHostAndPort()
+        {
+            Exception exception = Utils.ValidateHost(Host);
+
+            if (exception != null)
+            {
+                throw new Exception("Host is incorrect", exception);
+            }
+
+            exception = Utils.ValidatePort(Port);
+
+            if (exception != null)
+            {
+                throw new Exception("Port is incorrect", exception);
+            }
+        }
     }
 }

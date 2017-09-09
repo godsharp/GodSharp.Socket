@@ -57,13 +57,32 @@ namespace GodSharp.Sockets
         public new Action<Sender> OnClosed { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SocketServer"/> class.
+        /// Initializes a new instance of the <see cref="SocketServer"/> class.default host is 0.0.0.0,default port is 7788.
         /// </summary>
         public SocketServer()
         {
             base.OnClosed = OnClosedFun;
-            Port = 7788;
+
             Host = "0.0.0.0";
+            Port = 7788;
+
+            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SocketServer"/> class.
+        /// </summary>
+        /// <param name="port">The port.</param>
+        public SocketServer(int port) : this()
+        {
+            try
+            {
+                SetPort(port);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         /// <summary>
@@ -71,13 +90,18 @@ namespace GodSharp.Sockets
         /// </summary>
         /// <param name="host">The host.</param>
         /// <param name="port">The port.</param>
-        public SocketServer(string host="0.0.0.0", int port=7788, ProtocolType protocolType = ProtocolType.Tcp):this()
+        public SocketServer(string host, int port=7788) : this()
         {
-            SetHost(host);
+            try
+            {
+                SetHost(host);
 
-            SetPort(port);
-
-            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, protocolType);
+                SetPort(port);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         /// <summary>
@@ -149,18 +173,25 @@ namespace GodSharp.Sockets
         /// </summary>
         public override void Stop()
         {
-            foreach (var item in listeners)
+            try
             {
-                item.Value?.Stop();
-            }
-            
-            clients.Clear();
-            clientMap.Clear();
-            listeners.Clear();
+                foreach (var item in listeners)
+                {
+                    item.Value?.Stop();
+                }
 
-            if (socket.Connected)
+                clients.Clear();
+                clientMap.Clear();
+                listeners.Clear();
+
+                if (socket.Connected)
+                {
+                    socket.Close();
+                }
+            }
+            catch (Exception ex)
             {
-                socket.Close();
+                throw ex;
             }
         }
 
@@ -169,8 +200,16 @@ namespace GodSharp.Sockets
         /// </summary>
         private void Accept()
         {
-            Thread thread = new Thread(AcceptFun) { IsBackground = true };
-            thread.Start();
+            try
+            {
+                Running = true;
+                Thread thread = new Thread(AcceptFun) { IsBackground = true };
+                thread.Start();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         /// <summary>
@@ -178,7 +217,6 @@ namespace GodSharp.Sockets
         /// </summary>
         private void AcceptFun()
         {
-            Running = true;
             listeners = new Dictionary<Guid, Listener>();
             clientMap = new Dictionary<string, Guid>();
             clients = new List<Sender>();
@@ -193,8 +231,8 @@ namespace GodSharp.Sockets
                     {
                         continue;
                     }
-                    
-                    string id = $"{_socket.LocalEndPoint.GetHost()}:{_socket.LocalEndPoint}";
+
+                    string id = $"{_socket.RemoteEndPoint.GetHost()}:{_socket.RemoteEndPoint.GetPort()}";
 
                     if (clientMap?.ContainsKey(id) ==true)
                     {

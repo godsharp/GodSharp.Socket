@@ -34,6 +34,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Client\SocketClient.Async.cs" />
     <Compile Include="Internal\Listener\Listener.cs" />
     <Compile Include="Base\Sender.cs" />
     <Compile Include="Base\SocketBase.cs" />
@@ -42,10 +43,14 @@
     <Compile Include="Internal\Extension\SocketExtension.cs" />
     <Compile Include="Internal\Util\Utils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Server\SocketServer.Async.cs" />
     <Compile Include="Server\SocketServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Enum\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="GodSharp.Socket.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

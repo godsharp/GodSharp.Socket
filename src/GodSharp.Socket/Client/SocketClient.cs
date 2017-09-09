@@ -27,19 +27,26 @@ namespace GodSharp.Sockets
         /// The remote end point.
         /// </value>
         public EndPoint RemoteEndPoint => socket.RemoteEndPoint;
-        
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SocketClient"/> class.
+        /// </summary>
+        public SocketClient()
+        {
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Client"/> class.
         /// </summary>
         /// <param name="host">The host.</param>
         /// <param name="port">The port.</param>
-        public SocketClient(string host,int port, ProtocolType protocolType= ProtocolType.Tcp)
+        public SocketClient(string host,int port)
         {
             SetHost(host);
 
             SetPort(port);
 
-            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, protocolType);
+            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         }
 
         /// <summary>
@@ -47,14 +54,27 @@ namespace GodSharp.Sockets
         /// </summary>
         public void Connect()
         {
-            if (Connected)
+            try
             {
-                return;
+                if (Connected)
+                {
+                    return;
+                }
+
+                CheckHostAndPort();
+
+                socket.Connect(Host, Port);
+
+                listener?.Stop();
+
+                listener = new Listener(this, socket);
+
+                SetOnConnectedFun();
             }
-
-            socket.Connect(Host, Port);
-
-            SetOnConnectedFun();
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         /// <summary>
@@ -64,22 +84,33 @@ namespace GodSharp.Sockets
         /// <exception cref="ArgumentNullException">endPoint</exception>
         public void Connect(EndPoint endPoint)
         {
-            if (Connected)
+            try
             {
-                return;
-            }
+                if (Connected)
+                {
+                    return;
+                }
 
-            if (endPoint == null)
+                if (endPoint == null)
+                {
+                    throw new ArgumentNullException(nameof(endPoint));
+                }
+
+                this.Host = endPoint.GetHost();
+                this.Port = endPoint.GetPort();
+
+                socket.Connect(endPoint);
+
+                listener?.Stop();
+
+                listener = new Listener(this, socket);
+
+                SetOnConnectedFun();
+            }
+            catch (Exception ex)
             {
-                throw new ArgumentNullException(nameof(endPoint));
+                throw ex;
             }
-
-            this.Host = endPoint.GetHost();
-            this.Port = endPoint.GetPort();
-
-            socket.Connect(endPoint);
-
-            SetOnConnectedFun();
         }
 
         /// <summary>
@@ -89,18 +120,29 @@ namespace GodSharp.Sockets
         /// <param name="port">The port.</param>
         public void Connect(string host, int port)
         {
-            if (Connected)
+            try
             {
-                return;
+                if (Connected)
+                {
+                    return;
+                }
+
+                SetHost(host);
+
+                SetPort(port);
+
+                socket.Connect(Host, Port);
+
+                listener?.Stop();
+
+                listener = new Listener(this, socket);
+
+                SetOnConnectedFun();
             }
-
-            SetHost(host);
-
-            SetPort(port);
-
-            socket.Connect(Host, Port);
-
-            SetOnConnectedFun();
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         /// <summary>
@@ -111,20 +153,34 @@ namespace GodSharp.Sockets
         /// <exception cref="ArgumentNullException">address</exception>
         public void Connect(IPAddress address, int port)
         {
-            if (Connected)
+            try
             {
-                return;
-            }
+                if (Connected)
+                {
+                    return;
+                }
 
-            if (address==null)
+                if (address == null)
+                {
+                    throw new ArgumentNullException(nameof(address));
+                }
+
+                Host = address.ToString();
+
+                SetPort(port);
+
+                socket.Connect(address, Port);
+
+                listener?.Stop();
+
+                listener = new Listener(this, socket);
+
+                SetOnConnectedFun();
+            }
+            catch (Exception ex)
             {
-                throw new ArgumentNullException(nameof(address));
+                throw ex;
             }
-
-            Host = address.ToString();
-            socket.Connect(address, Port);
-
-            SetOnConnectedFun();
         }
         
         /// <summary>
@@ -139,9 +195,11 @@ namespace GodSharp.Sockets
                     return;
                 }
 
-                if (listener==null)
+                CheckHostAndPort();
+
+                if (!Connected)
                 {
-                    listener = new Listener(this,socket);
+                    throw new SocketException((int)SocketError.NotConnected);
                 }
 
                 listener.Start();

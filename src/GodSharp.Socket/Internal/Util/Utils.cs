@@ -12,13 +12,13 @@ namespace GodSharp.Sockets.Internal.Util
         /// <returns></returns>
         internal static Exception ValidatePort(int port)
         {
-            if (port > 0)
+            if (port >= 0 && port <= 65535)
             {
                 return null;
             }
             else
             {
-                return new FormatException("port must be greater than 0");
+                return new FormatException("port must be greater than 0 and less than 65535");
             }
         }
 
@@ -29,7 +29,7 @@ namespace GodSharp.Sockets.Internal.Util
         /// <returns></returns>
         internal static Exception ValidateHost(string host)
         {
-            if (string.IsNullOrEmpty(host))
+            if (string.IsNullOrEmpty(host) || host.Trim() == "")
             {
                 return new ArgumentNullException(nameof(host));
             }
