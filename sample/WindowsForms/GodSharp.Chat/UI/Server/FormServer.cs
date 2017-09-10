@@ -1,8 +1,11 @@
 ﻿using GodSharp.Chat.Enum;
+using GodSharp.Chat.Object;
+using GodSharp.Chat.Properties;
 using GodSharp.Sockets;
 using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Text;
 using System.Windows.Forms;
 
 namespace GodSharp.Chat.Server
@@ -22,6 +25,11 @@ namespace GodSharp.Chat.Server
             btnStop.Enabled = false;
         }
 
+        private void FormServer_Load(object sender, EventArgs e)
+        {
+            R.ServerEndPoint = new ServerParameter() { Host = Settings.Default.ServerEndPointHost, Port = Settings.Default.ServerEndPointPort };
+        }
+
         private void btnStart_Click(object sender, EventArgs e)
         {
             if (server?.Running==true)
@@ -29,7 +37,8 @@ namespace GodSharp.Chat.Server
                 return;
             }
 
-            server = new SocketServer("0.0.0.0",7788);
+            server = new SocketServer(R.ServerEndPoint.Host, R.ServerEndPoint.Port);
+            server.Encoding = Encoding.UTF8;
             server.OnConnected = OnConnected;
             server.OnData = OnData;
             server.OnClosed = OnClosed;
@@ -81,7 +90,7 @@ namespace GodSharp.Chat.Server
             byte[] tmp = sender.Guid.ToByteArray();
             byte[] buffer = new byte[tmp.Length + bytes.Length + 3];
             buffer[0] = 0x02;
-            buffer[tmp.Length] = 0x4D;
+            buffer[tmp.Length + 1] = 0x4D;
             buffer[buffer.Length - 1] = 0x03;
             Buffer.BlockCopy(tmp, 0, buffer, 1, tmp.Length);
             Buffer.BlockCopy(bytes, 0, buffer, tmp.Length + 2, bytes.Length);
@@ -152,6 +161,12 @@ namespace GodSharp.Chat.Server
                 this.richTextBox1.AppendLine(text, color);
                 this.richTextBox1.ScrollToBottom();
             }
+        }
+
+        private void lblSetting_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            FormServerSetting form = new FormServerSetting(SocketType.Server);
+            form.ShowDialog();
         }
     }
 }

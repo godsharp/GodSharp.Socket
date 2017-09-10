@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GodSharp.Sockets.Internal;
+using GodSharp.Sockets.Internal.Util;
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -73,10 +75,13 @@ namespace GodSharp.Sockets
         /// <param name="onData">The on data.</param>
         /// <param name="onException">The on exception.</param>
         /// <param name="onClosed">The on closed.</param>
-        internal Listener(SocketBase _base,Socket socket)
+        internal Listener(SocketBase _base,Socket socket, ListenerType type)
         {
             parent = _base;
-            this.Guid = Guid.NewGuid();
+
+            byte[] gb = Utils.Md5(type == ListenerType.Server ? socket.RemoteEndPoint.ToString() : socket.LocalEndPoint.ToString());
+
+            this.Guid = new Guid(gb);
             this.Socket = socket;
 
             RemoteEndPoint = this.Socket.RemoteEndPoint;

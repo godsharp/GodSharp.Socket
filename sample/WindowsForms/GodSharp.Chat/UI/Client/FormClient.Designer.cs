@@ -40,8 +40,8 @@
             this.rtbChatInputBox = new System.Windows.Forms.RichTextBox();
             this.rtbChatBox = new System.Windows.Forms.RichTextBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.btnSend = new System.Windows.Forms.Button();
             this.lblOnlineNumber = new System.Windows.Forms.Label();
+            this.btnSend = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -169,6 +169,17 @@
             this.panel1.Size = new System.Drawing.Size(423, 36);
             this.panel1.TabIndex = 1;
             // 
+            // lblOnlineNumber
+            // 
+            this.lblOnlineNumber.Dock = System.Windows.Forms.DockStyle.Left;
+            this.lblOnlineNumber.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblOnlineNumber.Location = new System.Drawing.Point(0, 0);
+            this.lblOnlineNumber.Name = "lblOnlineNumber";
+            this.lblOnlineNumber.Size = new System.Drawing.Size(219, 36);
+            this.lblOnlineNumber.TabIndex = 1;
+            this.lblOnlineNumber.Text = "Online Clients: 0";
+            this.lblOnlineNumber.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // btnSend
             // 
             this.btnSend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -180,17 +191,6 @@
             this.btnSend.Text = "Send";
             this.btnSend.UseVisualStyleBackColor = true;
             this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
-            // 
-            // lblOnlineNumber
-            // 
-            this.lblOnlineNumber.Dock = System.Windows.Forms.DockStyle.Left;
-            this.lblOnlineNumber.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblOnlineNumber.Location = new System.Drawing.Point(0, 0);
-            this.lblOnlineNumber.Name = "lblOnlineNumber";
-            this.lblOnlineNumber.Size = new System.Drawing.Size(219, 36);
-            this.lblOnlineNumber.TabIndex = 1;
-            this.lblOnlineNumber.Text = "Online Clients: 0";
-            this.lblOnlineNumber.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // FormClient
             // 
@@ -204,6 +204,7 @@
             this.MinimumSize = new System.Drawing.Size(618, 492);
             this.Name = "FormClient";
             this.Text = "GodSharp Chat Client";
+            this.Load += new System.EventHandler(this.FormClient_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);

@@ -1,4 +1,4 @@
-﻿namespace GodSharp.Chat.Client
+﻿namespace GodSharp.Chat
 {
     partial class FormServerSetting
     {
@@ -119,8 +119,11 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormServerSetting";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "GodSahrp Server Setting";
+            this.Load += new System.EventHandler(this.FormServerSetting_Load);
             ((System.ComponentModel.ISupportInitialize)(this.nudPort)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

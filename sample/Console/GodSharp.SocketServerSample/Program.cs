@@ -8,7 +8,7 @@ namespace GodSharp.SocketServerSample
         static void Main()
         {
             Random random = new Random();
-            SocketServer server = new SocketServer(port:7788)
+            SocketServer server = new SocketServer()
             {
                 OnConnected = (sender) =>
                 {

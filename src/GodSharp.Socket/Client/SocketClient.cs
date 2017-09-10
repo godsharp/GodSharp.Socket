@@ -67,7 +67,7 @@ namespace GodSharp.Sockets
 
                 listener?.Stop();
 
-                listener = new Listener(this, socket);
+                listener = new Listener(this, socket, Internal.ListenerType.Client);
 
                 SetOnConnectedFun();
             }
@@ -103,7 +103,7 @@ namespace GodSharp.Sockets
 
                 listener?.Stop();
 
-                listener = new Listener(this, socket);
+                listener = new Listener(this, socket, Internal.ListenerType.Client);
 
                 SetOnConnectedFun();
             }
@@ -135,7 +135,7 @@ namespace GodSharp.Sockets
 
                 listener?.Stop();
 
-                listener = new Listener(this, socket);
+                listener = new Listener(this, socket, Internal.ListenerType.Client);
 
                 SetOnConnectedFun();
             }
@@ -173,7 +173,7 @@ namespace GodSharp.Sockets
 
                 listener?.Stop();
 
-                listener = new Listener(this, socket);
+                listener = new Listener(this, socket, Internal.ListenerType.Client);
 
                 SetOnConnectedFun();
             }

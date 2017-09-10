@@ -42,38 +42,46 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Client\FormClient.cs">
+    <Compile Include="UI\Client\FormClient.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Client\FormClient.Designer.cs">
+    <Compile Include="UI\Client\FormClient.Designer.cs">
       <DependentUpon>FormClient.cs</DependentUpon>
     </Compile>
-    <Compile Include="Client\FormServerSetting.cs">
+    <Compile Include="UI\Common\FormServerSetting.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Client\FormServerSetting.Designer.cs">
+    <Compile Include="UI\Common\FormServerSetting.Designer.cs">
       <DependentUpon>FormServerSetting.cs</DependentUpon>
     </Compile>
     <Compile Include="Enum\MessageType.cs" />
+    <Compile Include="Enum\SocketType.cs" />
     <Compile Include="Extension\Extension.cs" />
+    <Compile Include="Object\R.cs" />
     <Compile Include="Object\ServerParameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Server\FormServer.cs">
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Server\FormServer.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Server\FormServer.Designer.cs">
+    <Compile Include="UI\Server\FormServer.Designer.cs">
       <DependentUpon>FormServer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Util\Utils.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Client\FormClient.resx">
+    <EmbeddedResource Include="UI\Client\FormClient.resx">
       <DependentUpon>FormClient.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Client\FormServerSetting.resx">
+    <EmbeddedResource Include="UI\Common\FormServerSetting.resx">
       <DependentUpon>FormServerSetting.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Server\FormServer.resx">
+    <EmbeddedResource Include="UI\Server\FormServer.resx">
       <DependentUpon>FormServer.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
@@ -82,6 +90,13 @@
       <Project>{877e1aa2-7eae-40fc-ab49-c52262f09d9d}</Project>
       <Name>GodSharp.Socket</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

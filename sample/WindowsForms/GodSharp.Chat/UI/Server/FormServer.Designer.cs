@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormServer));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lblSetting = new System.Windows.Forms.LinkLabel();
             this.btnStop = new System.Windows.Forms.Button();
             this.btnStart = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -43,22 +44,35 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.lblSetting);
             this.groupBox1.Controls.Add(this.btnStop);
             this.groupBox1.Controls.Add(this.btnStart);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(331, 111);
+            this.groupBox1.Size = new System.Drawing.Size(331, 120);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Action";
             // 
+            // lblSetting
+            // 
+            this.lblSetting.AutoSize = true;
+            this.lblSetting.Font = new System.Drawing.Font("Microsoft YaHei UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSetting.Location = new System.Drawing.Point(245, 92);
+            this.lblSetting.Name = "lblSetting";
+            this.lblSetting.Size = new System.Drawing.Size(56, 19);
+            this.lblSetting.TabIndex = 3;
+            this.lblSetting.TabStop = true;
+            this.lblSetting.Text = "Setting";
+            this.lblSetting.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblSetting_LinkClicked);
+            // 
             // btnStop
             // 
             this.btnStop.Font = new System.Drawing.Font("Microsoft YaHei UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnStop.Location = new System.Drawing.Point(169, 20);
+            this.btnStop.Location = new System.Drawing.Point(187, 19);
             this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(150, 77);
+            this.btnStop.Size = new System.Drawing.Size(114, 70);
             this.btnStop.TabIndex = 1;
             this.btnStop.Text = "Stop";
             this.btnStop.UseVisualStyleBackColor = true;
@@ -67,9 +81,9 @@
             // btnStart
             // 
             this.btnStart.Font = new System.Drawing.Font("Microsoft YaHei UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnStart.Location = new System.Drawing.Point(12, 20);
+            this.btnStart.Location = new System.Drawing.Point(30, 19);
             this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(150, 77);
+            this.btnStart.Size = new System.Drawing.Size(114, 70);
             this.btnStart.TabIndex = 2;
             this.btnStart.Text = "Start";
             this.btnStart.UseVisualStyleBackColor = true;
@@ -80,9 +94,9 @@
             this.panel1.Controls.Add(this.richTextBox1);
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 111);
+            this.panel1.Location = new System.Drawing.Point(0, 120);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(331, 208);
+            this.panel1.Size = new System.Drawing.Size(331, 199);
             this.panel1.TabIndex = 1;
             // 
             // richTextBox1
@@ -91,7 +105,7 @@
             this.richTextBox1.Font = new System.Drawing.Font("Microsoft YaHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.richTextBox1.Location = new System.Drawing.Point(0, 31);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(331, 177);
+            this.richTextBox1.Size = new System.Drawing.Size(331, 168);
             this.richTextBox1.TabIndex = 2;
             this.richTextBox1.Text = "xxx join";
             // 
@@ -125,7 +139,9 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormServer";
             this.Text = "GodSharp Chat Server";
+            this.Load += new System.EventHandler(this.FormServer_Load);
             this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -141,6 +157,7 @@
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label lblOnlineNumber;
+        private System.Windows.Forms.LinkLabel lblSetting;
     }
 }
 

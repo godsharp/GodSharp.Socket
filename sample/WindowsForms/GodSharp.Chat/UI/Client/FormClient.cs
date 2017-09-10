@@ -1,5 +1,6 @@
 ﻿using GodSharp.Chat.Enum;
 using GodSharp.Chat.Object;
+using GodSharp.Chat.Properties;
 using GodSharp.Sockets;
 using System;
 using System.Diagnostics;
@@ -28,16 +29,24 @@ namespace GodSharp.Chat.Client
         Color color2;
 
         string message;
-        MessageType messageType;
         bool isSelf;
         int onlineNumber = 0;
 
         public FormClient()
         {
             InitializeComponent();
-            rtbChatBox.Clear();
         }
         
+        private void FormClient_Load(object sender, EventArgs e)
+        {
+            rtbChatBox.Clear();
+            rtbChatInputBox.Clear();
+            SetConnected(false);
+            SetSendButton(false);
+
+            R.ClientEndPoint = new ServerParameter() { Host = Settings.Default.ClientEndPointHost, Port = Settings.Default.ClientEndPointPort };
+        }
+
         private void btnSend_Click(object sender, EventArgs e)
         {
             string msg = this.rtbChatInputBox.Text.Trim();
@@ -57,14 +66,14 @@ namespace GodSharp.Chat.Client
         
         private void tsmiServerSetting_Click(object sender, EventArgs e)
         {
-            FormServerSetting form = new FormServerSetting();
+            FormServerSetting form = new FormServerSetting(SocketType.Client);
             form.ShowDialog();
         }
 
         private void tsmiServerConnect_Click(object sender, EventArgs e)
         {
-            client = new SocketClient(ServerParameter.Host, ServerParameter.Port);
-
+            client = new SocketClient(R.ClientEndPoint.Host, R.ClientEndPoint.Port);
+            client.Encoding = Encoding.UTF8;
             client.OnConnected = OnConnected;
             client.OnData = OnData;
             client.OnClosed = OnClosed;
@@ -96,7 +105,8 @@ namespace GodSharp.Chat.Client
         {
             Debug.WriteLine($"connected to server {sender.RemoteEndPoint}");
 
-            AppendMessage(sender.LocalEndPoint.ToString(), "join(you).", MessageType.Join, true);
+            SetSendButton(true);
+            //AppendMessage(sender.LocalEndPoint.ToString(), "join(you).", MessageType.Join, true);
         }
         
         private void OnData(Sender sender, byte[] bytes)
@@ -120,13 +130,10 @@ namespace GodSharp.Chat.Client
                 return;
             }
 
-            string guidStr = client.Encoding.GetString(buffer, 1, 16);
-
-            if (!Guid.TryParse(guidStr, out Guid guid))
-            {
-                return;
-            }
-
+            byte[] gb = new byte[16];
+            Buffer.BlockCopy(buffer, 1, gb, 0, 16);
+            Guid guid = new Guid(gb);
+            
             isSelf = guid == sender.Guid;
 
             byte cmd = buffer[17];
@@ -136,19 +143,19 @@ namespace GodSharp.Chat.Client
                 case 0x4F://O
                     onlineNumber = BitConverter.ToInt32(buffer, 18);
                     SetOnlineNumber(onlineNumber);
-                    AppendMessage(sender.RemoteEndPoint.ToString(), "join", MessageType.Join, isSelf);
+                    AppendMessage(guid.ToString(), "join", MessageType.Join, isSelf);
                     break;
                 case 0x4D://M
                     {
                         message = client.Encoding.GetString(buffer, 18, buffer.Length - 19);
 
-                        AppendMessage(sender.RemoteEndPoint.ToString(), message, MessageType.Chat, isSelf);
+                        AppendMessage(guid.ToString(), message, MessageType.Chat, isSelf);
                     }
                     break;
                 case 0x43://C
                     onlineNumber = BitConverter.ToInt32(buffer, 18);
                     SetOnlineNumber(onlineNumber);
-                    AppendMessage(sender.RemoteEndPoint.ToString(), "leave", MessageType.Leave, isSelf);
+                    AppendMessage(guid.ToString(), "leave", MessageType.Leave, isSelf);
                     break;
             }
         }
@@ -156,7 +163,10 @@ namespace GodSharp.Chat.Client
         private void OnClosed(Sender sender)
         {
             Debug.WriteLine($"disconnect from server {sender.RemoteEndPoint}");
-            AppendMessage(sender.LocalEndPoint.ToString(), "leave(you).", MessageType.Leave, true);
+            //AppendMessage(sender.LocalEndPoint.ToString(), "leave(you).", MessageType.Leave, true);
+
+            SetOnlineNumber(0);
+            SetSendButton(false);
         }
 
         private void OnException(Sender sender, Exception exception)
@@ -182,7 +192,7 @@ namespace GodSharp.Chat.Client
             if (this.rtbChatBox.InvokeRequired)
             {
                 Action<string, string, MessageType, bool> action = AppendMessage;
-                this.Invoke(action, new object[] { host, text, type });
+                this.Invoke(action, new object[] { host, text, type, self });
             }
             else
             {
@@ -216,6 +226,19 @@ namespace GodSharp.Chat.Client
                 case MessageType.Leave:
                     color1 = self ? toLeaveColor : fromLeaveColor;
                     break;
+            }
+        }
+
+        private void SetSendButton(bool enable)
+        {
+            if (this.btnSend.InvokeRequired)
+            {
+                Action<bool> action = SetSendButton;
+                this.Invoke(action, new object[] { enable });
+            }
+            else
+            {
+                btnSend.Enabled = enable;
             }
         }
     }

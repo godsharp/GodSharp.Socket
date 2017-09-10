@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace GodSharp.Sockets.Internal.Util
 {
@@ -43,6 +46,19 @@ namespace GodSharp.Sockets.Internal.Util
             {
                 return new FormatException("host format is incorrect");
             }
+        }
+
+        internal static byte[] Md5(string str)
+        {
+            if (string.IsNullOrEmpty(str) || str.Trim() == "")
+            {
+                return null;
+            }
+
+            MD5 md5 = MD5.Create();
+            byte[] result = md5.ComputeHash(Encoding.UTF8.GetBytes(str));
+
+            return result;
         }
     }
 }

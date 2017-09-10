@@ -41,6 +41,7 @@
     <Compile Include="Client\SocketClient.cs" />
     <Compile Include="Internal\Extension\EndPointExtension.cs" />
     <Compile Include="Internal\Extension\SocketExtension.cs" />
+    <Compile Include="Internal\Listener\ListenerType.cs" />
     <Compile Include="Internal\Util\Utils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Server\SocketServer.Async.cs" />

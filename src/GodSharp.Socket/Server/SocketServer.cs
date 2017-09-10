@@ -239,7 +239,7 @@ namespace GodSharp.Sockets
                         continue;
                     }
 
-                    Listener listener = new Listener(this, _socket);
+                    Listener listener = new Listener(this, _socket, Internal.ListenerType.Server);
                     listener.Start();
                     
                     listeners.Add(listener.Guid, listener);
