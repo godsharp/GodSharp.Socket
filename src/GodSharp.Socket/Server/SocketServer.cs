@@ -227,6 +227,21 @@ namespace GodSharp.Sockets
                 {
                     Socket _socket = socket.Accept();
 
+                    // keep alive
+                    if (KeepAlive)
+                    {
+                        try
+                        {
+                            _socket.KeepAlive();
+                        }
+                        catch (Exception ex)
+                        {
+#if DEBUG
+                            Console.WriteLine(ex.Message);
+#endif
+                        } 
+                    }
+
                     if (!_socket.Connected)
                     {
                         continue;

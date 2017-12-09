@@ -26,6 +26,14 @@ namespace GodSharp.Sockets
         public int Port { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether [keep alive],default is true.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [keep alive]; otherwise, <c>false</c>.
+        /// </value>
+        public bool KeepAlive { get; set; } = true;
+
+        /// <summary>
         /// Gets or sets the encoding.
         /// </summary>
         /// <value>
