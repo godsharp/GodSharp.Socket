@@ -13,6 +13,14 @@ namespace GodSharp.Sockets
         private Listener listener = null;
 
         /// <summary>
+        /// Gets or sets the client identifier.
+        /// </summary>
+        /// <value>
+        /// The client identifier.
+        /// </value>
+        public string ClientId { get; set; }
+
+        /// <summary>
         /// Gets the sender.
         /// </summary>
         /// <value>

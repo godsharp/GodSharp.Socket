@@ -48,9 +48,7 @@
     <Compile Include="Server\SocketServer.Async.cs" />
     <Compile Include="Server\SocketServer.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Enum\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="GodSharp.Socket.nuspec" />
   </ItemGroup>

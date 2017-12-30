@@ -17,6 +17,14 @@ namespace GodSharp.Sockets
         private List<Sender> clients;
 
         /// <summary>
+        /// Gets or sets the server identifier.
+        /// </summary>
+        /// <value>
+        /// The server identifier.
+        /// </value>
+        public string ServerId { get; set; }
+
+        /// <summary>
         /// Gets the items.
         /// </summary>
         /// <value>
