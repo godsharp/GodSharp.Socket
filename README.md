@@ -96,7 +96,7 @@ support async
 [mi1]: https://img.shields.io/myget/godsharp/v/GodSharp.Socket.svg?label=myget&style=flat-square
 [mi2]: https://img.shields.io/myget/godsharp/vpre/GodSharp.Socket.svg?label=myget&style=flat-square
 
-[n1]: https://www.nuget.org/packages/GodSharp.Logging.Socket
+[n1]: https://www.nuget.org/packages/GodSharp.Socket
 
 [ni1]: https://img.shields.io/nuget/v/GodSharp.Socket.svg?label=nuget&style=flat-square
 [ni2]: https://img.shields.io/nuget/vpre/GodSharp.Socket.svg?label=nuget&style=flat-square

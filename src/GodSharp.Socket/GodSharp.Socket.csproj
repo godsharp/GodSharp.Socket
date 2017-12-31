@@ -1,14 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>GodSharp.Socket</AssemblyName>
     <RootNamespace>GodSharp.Socket</RootNamespace>
+    <AssemblyName>GodSharp.Socket</AssemblyName>
+    <Title>GodSharp.Socket</Title>
     <Company>GodSharp</Company>
     <Authors>seayxu</Authors>
     <RepositoryType>git</RepositoryType>
     <PackageProjectUrl>https://github.com/godsharp/GodSharp.Socket.git</PackageProjectUrl>
     <PackageIconUrl>https://avatars3.githubusercontent.com/u/26563296</PackageIconUrl>
-    <PackageLicenseUrl>https://github.com/godsharp/GodSharp.Logging/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseUrl>https://github.com/godsharp/GodSharp.Socket/blob/master/LICENSE</PackageLicenseUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Copyright>Copyright © GodSharp 2017</Copyright>
     <NeutralLanguage>en-US</NeutralLanguage>
