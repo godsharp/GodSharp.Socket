@@ -72,10 +72,6 @@
     <Content Include="0.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\GodSharp.Socket\GodSharp.Socket.csproj">
-      <Project>{877e1aa2-7eae-40fc-ab49-c52262f09d9d}</Project>
-      <Name>GodSharp.Socket</Name>
-    </ProjectReference>
     <ProjectReference Include="..\GodSharp.Chat\GodSharp.Chat.csproj">
       <Project>{d556f994-9a72-4f30-8b55-9d9faa14c5fe}</Project>
       <Name>GodSharp.Chat</Name>

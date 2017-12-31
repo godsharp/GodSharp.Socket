@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="GodSharp.Chat.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ClientEndPointHost" Type="System.String" Scope="User">
+      <Value Profile="(Default)">127.0.0.1</Value>
+    </Setting>
+    <Setting Name="ClientEndPointPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">7788</Value>
+    </Setting>
+    <Setting Name="ServerEndPointHost" Type="System.String" Scope="User">
+      <Value Profile="(Default)">0.0.0.0</Value>
+    </Setting>
+    <Setting Name="ServerEndPointPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">7788</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

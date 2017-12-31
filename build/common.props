@@ -1,43 +1,40 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project>
+
+  <Import Project=".\version.props" />
 
   <PropertyGroup>
-    <AssemblyName>GodSharp.Socket</AssemblyName>
     <RootNamespace>GodSharp.Socket</RootNamespace>
     <Company>GodSharp</Company>
     <Authors>seayxu</Authors>
     <RepositoryType>git</RepositoryType>
-    <PackageProjectUrl>https://github.com/godsharp/GodSharp.Socket.git</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/godsharp/GodSharp.Logging.git</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/godsharp/GodSharp.Logging</PackageProjectUrl>
     <PackageIconUrl>https://avatars3.githubusercontent.com/u/26563296</PackageIconUrl>
     <PackageLicenseUrl>https://github.com/godsharp/GodSharp.Logging/blob/master/LICENSE</PackageLicenseUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Copyright>Copyright © GodSharp 2017</Copyright>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <Description>A easy to used socket server and client for .NET.</Description>
-    <OutputPath>$(SolutionDir)\output\$(AssemblyName)</OutputPath>
-    <DocumentationFile>$(SolutionDir)\output\$(AssemblyName)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-    <!--<TargetFramework>netstandard2.0</TargetFramework>-->
     <TargetFrameworks Condition="'$(LibraryFrameworks)'==''">net35;net40;net45;net46;net47;netstandard2.0;</TargetFrameworks>
     <TargetFrameworks Condition="'$(LibraryFrameworks)'!=''">$(LibraryFrameworks)</TargetFrameworks>
-  </PropertyGroup>  
-  
+    <OutputPath>$(SolutionDir)\output\$(AssemblyName)</OutputPath>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(TargetFramework)'=='net35'">
-    <DefineConstants>NET35;$(AdditionalConstants)</DefineConstants>
+    <DefineConstants>NFX;NET35;$(AdditionalConstants)</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='net40'">
-    <DefineConstants>NET40;$(AdditionalConstants)</DefineConstants>
+    <DefineConstants>NFX;NET40;$(AdditionalConstants)</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='net45'">
-    <DefineConstants>NET45;$(AdditionalConstants)</DefineConstants>
+    <DefineConstants>NFX;NET45;$(AdditionalConstants)</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='net46'">
-    <DefineConstants>NET46;$(AdditionalConstants)</DefineConstants>
+    <DefineConstants>NFX;NET46;$(AdditionalConstants)</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='net47'">
-    <DefineConstants>NET47;$(AdditionalConstants)</DefineConstants>
+    <DefineConstants>NFX;NET47;$(AdditionalConstants)</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
-    <DefineConstants>NETSTANDARD2_0;$(AdditionalConstants)</DefineConstants>
+    <DefineConstants>CFX;NETSTANDARD2_0;$(AdditionalConstants)</DefineConstants>
   </PropertyGroup>
-  
-  <Import Project="..\..\build\version.props" />
 </Project>

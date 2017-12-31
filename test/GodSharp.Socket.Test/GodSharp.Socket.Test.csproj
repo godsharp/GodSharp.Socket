@@ -56,7 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\GodSharp.Socket\GodSharp.Socket.csproj">
-      <Project>{877e1aa2-7eae-40fc-ab49-c52262f09d9d}</Project>
+      <Project>{06bbfbf4-9958-42cb-9920-3cf516773368}</Project>
       <Name>GodSharp.Socket</Name>
     </ProjectReference>
   </ItemGroup>

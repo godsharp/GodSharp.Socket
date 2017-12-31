@@ -1,13 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2D285DE6-8FC0-4FB6-A438-EA2AD5FEA561}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{D2FB2A10-BA9D-41F8-9D8F-9F8945F39FA6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodSharp.Socket", "src\GodSharp.Socket\GodSharp.Socket.csproj", "{877E1AA2-7EAE-40FC-AB49-C52262F09D9D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{677097FA-DFF0-4DEF-BFF6-3D2EF8510769}"
 	ProjectSection(SolutionItems) = preProject
@@ -21,11 +17,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{56DB72
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Console", "Console", "{169FDBD0-1C98-4A7E-B8B6-1023B73624F0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WindowsForms", "WindowsForms", "{43852E3B-E5B7-4A54-B450-4B48F6C3F025}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{3E90692F-1C39-4244-88E3-EEA2B02FE7E7}"
+	ProjectSection(SolutionItems) = preProject
+		build\version.props = build\version.props
+	EndProjectSection
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodSharp.SocketServerSample", "sample\Console\GodSharp.SocketServerSample\GodSharp.SocketServerSample.csproj", "{8F3CAA2A-6DC3-46D5-ABE6-3850F29FFF75}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodSharp.SocketClientSapmle", "sample\Console\GodSharp.SocketClientSapmle\GodSharp.SocketClientSapmle.csproj", "{DA03E415-51BC-4223-B8C8-E2ABFF1F77AF}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WindowsForms", "WindowsForms", "{43852E3B-E5B7-4A54-B450-4B48F6C3F025}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodSharp.ChatClient", "sample\WindowsForms\GodSharp.ChatClient\GodSharp.ChatClient.csproj", "{B1EFC930-1A12-4FA6-9BDA-EC27E477528B}"
 EndProject
@@ -33,9 +34,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodSharp.ChatServer", "samp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodSharp.Chat", "sample\WindowsForms\GodSharp.Chat\GodSharp.Chat.csproj", "{D556F994-9A72-4F30-8B55-9D9FAA14C5FE}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{603D2C45-7DDB-43C5-8D0A-B379E54186B2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodSharp.Socket.Test", "test\GodSharp.Socket.Test\GodSharp.Socket.Test.csproj", "{BD2FD84D-386E-4F99-923B-45431727E479}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GodSharp.Socket", "src\GodSharp.Socket\GodSharp.Socket.csproj", "{06BBFBF4-9958-42CB-9920-3CF516773368}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,10 +42,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{877E1AA2-7EAE-40FC-AB49-C52262F09D9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{877E1AA2-7EAE-40FC-AB49-C52262F09D9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{877E1AA2-7EAE-40FC-AB49-C52262F09D9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{877E1AA2-7EAE-40FC-AB49-C52262F09D9D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8F3CAA2A-6DC3-46D5-ABE6-3850F29FFF75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8F3CAA2A-6DC3-46D5-ABE6-3850F29FFF75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F3CAA2A-6DC3-46D5-ABE6-3850F29FFF75}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -67,25 +62,23 @@ Global
 		{D556F994-9A72-4F30-8B55-9D9FAA14C5FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D556F994-9A72-4F30-8B55-9D9FAA14C5FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D556F994-9A72-4F30-8B55-9D9FAA14C5FE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BD2FD84D-386E-4F99-923B-45431727E479}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BD2FD84D-386E-4F99-923B-45431727E479}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BD2FD84D-386E-4F99-923B-45431727E479}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BD2FD84D-386E-4F99-923B-45431727E479}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06BBFBF4-9958-42CB-9920-3CF516773368}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06BBFBF4-9958-42CB-9920-3CF516773368}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06BBFBF4-9958-42CB-9920-3CF516773368}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06BBFBF4-9958-42CB-9920-3CF516773368}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{D2FB2A10-BA9D-41F8-9D8F-9F8945F39FA6} = {2D285DE6-8FC0-4FB6-A438-EA2AD5FEA561}
-		{877E1AA2-7EAE-40FC-AB49-C52262F09D9D} = {2D285DE6-8FC0-4FB6-A438-EA2AD5FEA561}
 		{169FDBD0-1C98-4A7E-B8B6-1023B73624F0} = {56DB72CA-6C54-4BEC-956C-60CAE3828741}
+		{43852E3B-E5B7-4A54-B450-4B48F6C3F025} = {56DB72CA-6C54-4BEC-956C-60CAE3828741}
 		{8F3CAA2A-6DC3-46D5-ABE6-3850F29FFF75} = {169FDBD0-1C98-4A7E-B8B6-1023B73624F0}
 		{DA03E415-51BC-4223-B8C8-E2ABFF1F77AF} = {169FDBD0-1C98-4A7E-B8B6-1023B73624F0}
-		{43852E3B-E5B7-4A54-B450-4B48F6C3F025} = {56DB72CA-6C54-4BEC-956C-60CAE3828741}
 		{B1EFC930-1A12-4FA6-9BDA-EC27E477528B} = {43852E3B-E5B7-4A54-B450-4B48F6C3F025}
 		{5DD72AA1-F791-446C-9939-0CB1C5483D04} = {43852E3B-E5B7-4A54-B450-4B48F6C3F025}
 		{D556F994-9A72-4F30-8B55-9D9FAA14C5FE} = {43852E3B-E5B7-4A54-B450-4B48F6C3F025}
-		{BD2FD84D-386E-4F99-923B-45431727E479} = {603D2C45-7DDB-43C5-8D0A-B379E54186B2}
+		{06BBFBF4-9958-42CB-9920-3CF516773368} = {2D285DE6-8FC0-4FB6-A438-EA2AD5FEA561}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {68DFC265-6267-4153-8375-A35F8E5CD820}
