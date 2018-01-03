@@ -5,6 +5,9 @@ using System.Text;
 
 namespace GodSharp.Sockets.Internal.Util
 {
+    /// <summary>
+    /// Socket utils.
+    /// </summary>
     public class Utils
     {
         /// <summary>
@@ -47,6 +50,11 @@ namespace GodSharp.Sockets.Internal.Util
             }
         }
 
+        /// <summary>
+        /// MD5s the specified string.
+        /// </summary>
+        /// <param name="str">The string.</param>
+        /// <returns></returns>
         internal static byte[] Md5(string str)
         {
             if (string.IsNullOrEmpty(str) || str.Trim() == "")

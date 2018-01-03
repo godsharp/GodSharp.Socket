@@ -34,13 +34,13 @@ static void Main()
     {
         //get client data
         string message = server.Encoding.GetString(data, 0, data.Length);
-        Console.WriteLine($"server received data from {sender.RemoteEndPoint}£º{message}");
+        Console.WriteLine($"server received data from {sender.RemoteEndPoint}: {message}");
 
         //message = "server repley " + message;
         message = random.Next(100000000, 999999999).ToString();
         sender.Send(message);
 
-        Console.WriteLine($"server send data to {sender.RemoteEndPoint}£º{message}");
+        Console.WriteLine($"server send data to {sender.RemoteEndPoint}: {message}");
     };
 
     server.Listen();

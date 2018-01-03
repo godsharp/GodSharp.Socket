@@ -9,6 +9,7 @@ namespace GodSharp.Sockets.Internal.Extension
         /// <summary>
         /// Sends data to a connected <see cref="Socket"/>.
         /// </summary>
+        /// <param name="socket">The socket.</param>
         /// <param name="data">An string of type <see cref="string" /> that contains the data to be sent.</param>
         /// <param name="encoding">The <see cref="Encoding"/> for data.</param>
         /// <returns>The number of bytes sent to the <see cref="Socket"/>.</returns>
@@ -21,6 +22,7 @@ namespace GodSharp.Sockets.Internal.Extension
         /// <summary>
         /// Sends data to a connected <see cref="Socket" /> using the specified <see cref="SocketFlags" />.
         /// </summary>
+        /// <param name="socket">The socket.</param>
         /// <param name="data">An string of type <see cref="string" /> that contains the data to be sent.</param>
         /// <param name="socketFlags">A bitwise combination of the <see cref="SocketFlags" /> values.</param>
         /// <param name="encoding">The <see cref="Encoding"/> for data.</param>
@@ -30,10 +32,11 @@ namespace GodSharp.Sockets.Internal.Extension
             byte[] buffers = encoding.GetBytes(data);
             return socket.Send(buffers, socketFlags);
         }
-        
+
         /// <summary>
         ///  Sends the specified number of bytes of data to a connected <see cref="Socket" />, starting at the specified offset, and using the specified <see cref="SocketFlags" />.
         /// </summary>
+        /// <param name="socket">The socket.</param>
         /// <param name="data">An string of type <see cref="string" /> that contains the data to be sent.</param>
         /// <param name="socketFlags">A bitwise combination of the <see cref="SocketFlags" /> values.</param>
         /// <param name="socketError">A <see cref="SocketError" /> object that stores the socket error.</param>

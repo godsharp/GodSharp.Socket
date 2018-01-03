@@ -1,5 +1,8 @@
 ﻿namespace GodSharp.Sockets
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class KeepAliveOptions
     {
         /// <summary>

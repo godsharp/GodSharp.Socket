@@ -5,8 +5,14 @@ using System.Text;
 
 namespace GodSharp.Sockets
 {
+    /// <summary>
+    /// Socket base class.
+    /// </summary>
     public abstract class SocketBase
     {
+        /// <summary>
+        /// The socket
+        /// </summary>
         protected internal Socket socket = null;
 
         /// <summary>

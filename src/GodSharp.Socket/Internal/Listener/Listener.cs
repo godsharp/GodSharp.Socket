@@ -71,10 +71,9 @@ namespace GodSharp.Sockets
         /// <summary>
         /// Initializes a new instance of the <see cref="Listener"/> class.
         /// </summary>
+        /// <param name="_base">The base.</param>
         /// <param name="socket">The socket.</param>
-        /// <param name="onData">The on data.</param>
-        /// <param name="onException">The on exception.</param>
-        /// <param name="onClosed">The on closed.</param>
+        /// <param name="type">The type.</param>
         internal Listener(SocketBase _base,Socket socket, ListenerType type)
         {
             parent = _base;

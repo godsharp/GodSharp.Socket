@@ -6,6 +6,9 @@ using System.Text;
 
 namespace GodSharp.Sockets
 {
+    /// <summary>
+    /// Socket sender.
+    /// </summary>
     public class Sender
     {
         private Listener listener;
@@ -38,7 +41,7 @@ namespace GodSharp.Sockets
         /// <summary>
         /// Initializes a new instance of the <see cref="Sender"/> class.
         /// </summary>
-        /// <param name="socket">The socket.</param>
+        /// <param name="listener">The <paramref name="listener"/>.</param>
         /// <param name="encoding">The encoding.</param>
         internal Sender(Listener listener,Encoding encoding)
         {

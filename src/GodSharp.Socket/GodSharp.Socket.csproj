@@ -39,6 +39,15 @@
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
     <DefineConstants>NETSTANDARD2_0;$(AdditionalConstants)</DefineConstants>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Object\**" />
+    <EmbeddedResource Remove="Object\**" />
+    <None Remove="Object\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Base\SenderCollection.cs" />
+    <Compile Remove="Internal\Listener\ListenerCollection.cs" />
+  </ItemGroup>
   
   <Import Project="..\..\build\version.props" />
 </Project>
