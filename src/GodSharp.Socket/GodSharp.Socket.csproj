@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <RootNamespace>GodSharp.Socket</RootNamespace>
+    <RootNamespace>GodSharp.Sockets</RootNamespace>
     <AssemblyName>GodSharp.Socket</AssemblyName>
     <Title>GodSharp.Socket</Title>
     <Company>GodSharp</Company>

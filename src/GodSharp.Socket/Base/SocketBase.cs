@@ -48,7 +48,7 @@ namespace GodSharp.Sockets
         public Encoding Encoding { get; set; } = Encoding.Default;
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="Client"/> is connected.
+        /// Gets a value indicating whether this instance is connected.
         /// </summary>
         /// <value>
         ///   <c>true</c> if connected; otherwise, <c>false</c>.

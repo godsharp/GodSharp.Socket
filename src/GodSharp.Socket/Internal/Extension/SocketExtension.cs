@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
@@ -47,7 +48,35 @@ namespace GodSharp.Sockets.Internal.Extension
             byte[] buffers = encoding.GetBytes(data);
             return socket.Send(buffers, 0, buffers.Length, socketFlags, out socketError);
         }
+        
+        /// <summary>
+        /// Sends data to a <see cref="Socket"/>.
+        /// </summary>
+        /// <param name="socket">The socket.</param>
+        /// <param name="data">An string of type <see cref="string" /> that contains the data to be sent.</param>
+        /// <param name="endPoint">The end point.</param>
+        /// <param name="encoding">The <see cref="Encoding"/> for data.</param>
+        /// <returns>The number of bytes sent to the <see cref="Socket"/>.</returns>
+        public static int SendTo(this Socket socket, string data, EndPoint endPoint, Encoding encoding)
+        {
+            byte[] buffers = encoding.GetBytes(data);
+            return socket.SendTo(buffers, endPoint);
+        }
 
+        /// <summary>
+        ///  Sends the specified number of bytes of data to a <see cref="Socket" />, using the specified <see cref="SocketFlags" />.
+        /// </summary>
+        /// <param name="socket">The socket.</param>
+        /// <param name="data">An string of type <see cref="string" /> that contains the data to be sent.</param>
+        /// <param name="socketFlags">The socket flags.</param>
+        /// <param name="endPoint">The end point.</param>
+        /// <param name="encoding">The <see cref="Encoding"/> for data.</param>
+        /// <returns>The number of bytes sent to the <see cref="Socket"/>.</returns>
+        public static int SendTo(this Socket socket, string data, SocketFlags socketFlags, EndPoint endPoint, Encoding encoding)
+        {
+            byte[] buffers = encoding.GetBytes(data);
+            return socket.SendTo(buffers, socketFlags, endPoint);
+        }
 
         /// <summary>
         /// Set <see cref="Socket"/> keep-alive option.
