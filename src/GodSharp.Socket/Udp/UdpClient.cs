@@ -11,6 +11,8 @@ namespace GodSharp.Sockets
     /// </summary>
     public partial class UdpClient
     {
+        private bool initialized;
+
         /// <summary>
         /// The socket
         /// </summary>
@@ -21,19 +23,14 @@ namespace GodSharp.Sockets
         /// </summary>
         private UdpListener listener;
 
-        /// <summary>
-        /// Gets or sets the local host.
-        /// </summary>
-        /// <value>
-        /// The local host.
-        /// </value>
-        public string LocalHost { get; set; }
+        private AddressFamily family { get; set; }
 
+        #region Properties
         /// <summary>
         /// Gets or sets the local port.
         /// </summary>
         /// <value>
-        /// The local port.
+        /// The local port, default is 3030.
         /// </value>
         public int LocalPort { get; set; }
 
@@ -43,7 +40,7 @@ namespace GodSharp.Sockets
         /// <value>
         /// The remote host.
         /// </value>
-        public string RemoteHost { get; set; }
+        public string Host { get; set; }
 
         /// <summary>
         /// Gets or sets the remote port.
@@ -51,7 +48,7 @@ namespace GodSharp.Sockets
         /// <value>
         /// The remote port.
         /// </value>
-        public int RemotePort { get; set; }
+        public int Port { get; set; }
 
         /// <summary>
         /// Gets the remote end point.
@@ -59,7 +56,7 @@ namespace GodSharp.Sockets
         /// <value>
         /// The remote end point.
         /// </value>
-        public EndPoint RemoteEndPoint => socket.RemoteEndPoint;
+        public EndPoint RemoteEndPoint { get; private set; }
 
         /// <summary>
         /// Gets the local end point.
@@ -68,6 +65,14 @@ namespace GodSharp.Sockets
         /// The local end point.
         /// </value>
         public EndPoint LocalEndPoint => socket.LocalEndPoint;
+
+        /// <summary>
+        /// Gets the available.
+        /// </summary>
+        /// <value>
+        /// The available.
+        /// </value>
+        public int Available => socket.Available;
 
         /// <summary>
         /// Gets or sets the encoding.
@@ -115,22 +120,74 @@ namespace GodSharp.Sockets
         /// <value>
         /// The on stopped.
         /// </value>
-        public Action<UdpSender> OnStopped { get; set; } = null;
+        public Action<UdpSender> OnStopped { get; set; } = null; 
+        #endregion
 
+        #region Constructors
         /// <summary>
         /// Initializes a new instance of the <see cref="UdpClient"/> class.
         /// </summary>
-        public UdpClient()
+        public UdpClient() : this(AddressFamily.InterNetwork)
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UdpClient"/> class.
         /// </summary>
-        /// <param name="port">The port.</param>
-        public UdpClient(int port)
+        public UdpClient(AddressFamily addressFamily)
         {
+            LocalPort = 0;
+            initialized = false;
+
+            SetAddressFamily(addressFamily);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UdpClient"/> class.
+        /// </summary>
+        /// <param name="localPort">The local port.</param>
+        public UdpClient(int localPort) : this(AddressFamily.InterNetwork, localPort)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UdpClient"/> class.
+        /// </summary>
+        /// <param name="addressFamily">The address family.</param>
+        /// <param name="localPort">The local port.</param>
+        public UdpClient(AddressFamily addressFamily, int localPort) : this()
+        {
+            SetAddressFamily(addressFamily);
+
+            SetLocalPort(localPort);
+
+            Initialize();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UdpClient"/> class.
+        /// </summary>
+        /// <param name="host">The remote host.</param>
+        /// <param name="port">The remote port.</param>
+        public UdpClient(string host, int port) : this(AddressFamily.InterNetwork, host, port)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UdpClient"/> class.
+        /// </summary>
+        /// <param name="addressFamily">The address family.</param>
+        /// <param name="host">The host.</param>
+        /// <param name="port">The port.</param>
+        public UdpClient(AddressFamily addressFamily, string host, int port) : this()
+        {
+            SetAddressFamily(addressFamily);
+
+            SetHost(host);
+
             SetPort(port);
+
+            Initialize();
         }
 
         /// <summary>
@@ -138,29 +195,86 @@ namespace GodSharp.Sockets
         /// </summary>
         /// <param name="host">The host.</param>
         /// <param name="port">The port.</param>
-        public UdpClient(string host,int port)
+        /// <param name="localPort"></param>
+        public UdpClient(string host, int port, int localPort) : this(AddressFamily.InterNetwork, host, port, localPort)
         {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UdpClient"/> class.
+        /// </summary>
+        /// <param name="addressFamily">The address family.</param>
+        /// <param name="host">The host.</param>
+        /// <param name="port">The port.</param>
+        /// <param name="localPort">The local port.</param>
+        public UdpClient(AddressFamily addressFamily, string host, int port, int localPort) : this()
+        {
+            SetAddressFamily(addressFamily);
+
             SetHost(host);
 
             SetPort(port);
+
+            SetLocalPort(localPort);
+
+            Initialize();
         }
+
+        /// <summary>
+        /// Initializes this instance.
+        /// </summary>
+        /// <exception cref="System.InvalidOperationException">LocalPort</exception>
+        /// <exception cref="System.InvalidCastException">Host</exception>
+        private void Initialize()
+        {
+            try
+            {
+                if (LocalPort < 1 && Port < 1)
+                {
+                    throw new InvalidOperationException($"{nameof(LocalPort)} and {nameof(Port)} value invalid.");
+                }
+
+                if (Port > 0 && (string.IsNullOrEmpty(Host) || Host.Trim() == ""))
+                {
+                    throw new InvalidCastException($"{nameof(Host)} value invalid.");
+                }
+
+                if (socket == null)
+                {
+                    socket = new Socket(family, SocketType.Dgram, ProtocolType.Udp);
+
+                    if (LocalPort > 0)
+                    {
+                        socket.Bind(new IPEndPoint(socket.AddressFamily == AddressFamily.InterNetworkV6 ? IPAddress.IPv6Any : IPAddress.Any, LocalPort));
+                    }
+
+                    if (Port > 0)
+                    {
+                        RemoteEndPoint = new IPEndPoint(IPAddress.Parse(Host), Port);
+                        socket.Connect(RemoteEndPoint);
+                    }
+                }
+
+                initialized = true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        } 
+        #endregion
 
         /// <summary>
         /// Start Socket.
         /// </summary>
         public void Start()
         {
-            if (socket==null)
+            if (!initialized)
             {
-                socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-                
-                if (LocalPort > 0)
-                {
-                    socket.Bind(new IPEndPoint(LocalHost == null ? IPAddress.Any : IPAddress.Parse(LocalHost), LocalPort));
-                }
+                Initialize();
             }
 
-            listener = new UdpListener(socket, Encoding);
+            listener = new UdpListener(socket,RemoteEndPoint, Encoding);
             listener.OnStarted = OnStarted;
             listener.OnData = OnData;
             listener.OnException = OnException;
@@ -176,67 +290,7 @@ namespace GodSharp.Sockets
         /// </summary>
         public void Stop()
         {
-            listener.Stop();
-        }
-
-
-        /// <summary>
-        /// Sets the host.
-        /// </summary>
-        /// <param name="host">The host.</param>
-        private void SetHost(string host)
-        {
-            Exception ex = Utils.ValidateHost(host);
-            if (ex == null)
-            {
-                LocalHost = host;
-            }
-            else
-            {
-                throw ex;
-            }
-        }
-
-        /// <summary>
-        /// Sets the port.
-        /// </summary>
-        /// <param name="port">The port.</param>
-        private void SetPort(int port)
-        {
-            Exception ex = Utils.ValidatePort(port);
-            if (ex == null)
-            {
-                LocalPort = port;
-            }
-            else
-            {
-                throw ex;
-            }
-        }
-
-        /// <summary>
-        /// Checks the host and port.
-        /// </summary>
-        /// <exception cref="System.Exception">
-        /// Host is incorrect
-        /// or
-        /// Port is incorrect
-        /// </exception>
-        private void CheckHostAndPort()
-        {
-            Exception exception = Utils.ValidateHost(LocalHost);
-
-            if (exception != null)
-            {
-                throw new Exception("Host is incorrect", exception);
-            }
-
-            exception = Utils.ValidatePort(LocalPort);
-
-            if (exception != null)
-            {
-                throw new Exception("Port is incorrect", exception);
-            }
+            listener?.Stop();
         }
     }
 }

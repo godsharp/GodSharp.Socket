@@ -101,19 +101,20 @@ namespace GodSharp.Sockets
         /// Initializes a new instance of the <see cref="UdpListener"/> class.
         /// </summary>
         /// <param name="socket">The socket.</param>
+        /// <param name="remote">The remote.</param>
         /// <param name="encoding">The encoding.</param>
-        internal UdpListener(Socket socket,Encoding encoding)
+        internal UdpListener(Socket socket, EndPoint remote, Encoding encoding)
         {
             this.socket = socket;
 
-            RemoteEndPoint = this.socket.RemoteEndPoint;
-            LocalEndPoint = this.socket.LocalEndPoint;
+            LocalEndPoint = socket.LocalEndPoint;
+            RemoteEndPoint = remote;
 
-            byte[] gb = Utils.Md5(socket.LocalEndPoint.ToString());
+            byte[] gb = Utils.Md5(LocalEndPoint.ToString());
 
             this.Guid = new Guid(gb);
 
-            Sender = new UdpSender(socket,this.Guid,encoding);
+            Sender = new UdpSender(socket, remote, this.Guid, encoding);
         }
 
         /// <summary>
@@ -196,7 +197,7 @@ namespace GodSharp.Sockets
                     try
                     {
                         data = new byte[socket.ReceiveBufferSize];
-                        endPoint = new IPEndPoint(IPAddress.Any, 0);
+                        endPoint = new IPEndPoint(socket.AddressFamily == AddressFamily.InterNetworkV6 ? IPAddress.IPv6Any : IPAddress.Any, 0);
 
                         length = socket.ReceiveFrom(data, ref endPoint);
 
@@ -207,7 +208,7 @@ namespace GodSharp.Sockets
 
                         byte[] tmp = new byte[length];
                         Buffer.BlockCopy(data, 0, tmp, 0, length);
-
+                        
                         Sender.RemoteEndPoint = endPoint;
 
                         OnData?.Invoke(Sender, tmp);

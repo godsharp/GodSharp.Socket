@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{DA03E415-51BC-4223-B8C8-E2ABFF1F77AF}</ProjectGuid>
+    <ProjectGuid>{8F3CAA2A-6DC3-46D5-ABE6-3850F29FFF75}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>GodSharp.SocketClientSapmle</RootNamespace>
-    <AssemblyName>GodSharp.SocketClientSapmle</AssemblyName>
+    <RootNamespace>GodSharp.SocketServerSample</RootNamespace>
+    <AssemblyName>GodSharp.SocketServerSample</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -39,7 +39,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\GodSharp.Socket\GodSharp.Socket.csproj">
+    <ProjectReference Include="..\..\..\..\src\GodSharp.Socket\GodSharp.Socket.csproj">
       <Project>{06bbfbf4-9958-42cb-9920-3cf516773368}</Project>
       <Name>GodSharp.Socket</Name>
     </ProjectReference>

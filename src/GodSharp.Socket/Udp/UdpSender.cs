@@ -43,22 +43,23 @@ namespace GodSharp.Sockets
         /// <value>
         /// The local end point.
         /// </value>
-        public EndPoint LocalEndPoint { get; internal set; }
+        public EndPoint LocalEndPoint { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UdpSender"/> class.
         /// </summary>
         /// <param name="socket">The socket.</param>
+        /// <param name="remote">The remote.</param>
         /// <param name="guid">The unique identifier.</param>
         /// <param name="encoding">The encoding.</param>
-        public UdpSender(Socket socket, Guid guid,Encoding encoding)
+        public UdpSender(Socket socket, EndPoint remote, Guid guid,Encoding encoding)
         {
             this.socket = socket;
 
+            LocalEndPoint = socket.LocalEndPoint;
+            RemoteEndPoint = remote;
             Guid = guid;
             Encoding = encoding;
-            RemoteEndPoint = socket?.RemoteEndPoint;
-            LocalEndPoint = socket?.LocalEndPoint;
         }
 
         #region Send with default RemoteEndPoint
@@ -71,6 +72,11 @@ namespace GodSharp.Sockets
         {
             try
             {
+                if (RemoteEndPoint==null)
+                {
+                    return -1;
+                }
+
                 return socket.SendTo(data, RemoteEndPoint, this.Encoding);
             }
             catch (Exception ex)
@@ -88,6 +94,11 @@ namespace GodSharp.Sockets
         {
             try
             {
+                if (RemoteEndPoint == null)
+                {
+                    return -1;
+                }
+
                 return socket.SendTo(buffer, RemoteEndPoint);
             }
             catch (Exception ex)
@@ -106,6 +117,11 @@ namespace GodSharp.Sockets
         {
             try
             {
+                if (RemoteEndPoint == null)
+                {
+                    return -1;
+                }
+
                 return socket.SendTo(data, socketFlags, RemoteEndPoint, this.Encoding);
             }
             catch (Exception ex)
@@ -124,6 +140,11 @@ namespace GodSharp.Sockets
         {
             try
             {
+                if (RemoteEndPoint == null)
+                {
+                    return -1;
+                }
+
                 return socket.SendTo(buffer, socketFlags, RemoteEndPoint);
             }
             catch (Exception ex)
@@ -143,6 +164,11 @@ namespace GodSharp.Sockets
         {
             try
             {
+                if (RemoteEndPoint == null)
+                {
+                    return -1;
+                }
+
                 return socket.SendTo(buffer, size, socketFlags, RemoteEndPoint);
             }
             catch (Exception ex)
@@ -163,6 +189,11 @@ namespace GodSharp.Sockets
         {
             try
             {
+                if (RemoteEndPoint == null)
+                {
+                    return -1;
+                }
+
                 return socket.SendTo(buffer, offset, size, socketFlags, RemoteEndPoint);
             }
             catch (Exception ex)
