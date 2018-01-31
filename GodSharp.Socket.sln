@@ -42,9 +42,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodSharp.ChatClient", "samp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodSharp.ChatServer", "sample\Tcp\Chat\GodSharp.ChatServer\GodSharp.ChatServer.csproj", "{5DD72AA1-F791-446C-9939-0CB1C5483D04}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodSharp.UdpClientMasterSample", "sample\Udp\Samples\GodSharp.UdpClientMasterSample\GodSharp.UdpClientMasterSample.csproj", "{91D1F01F-2D76-4B3C-8871-E76BC69A873B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GodSharp.UdpClientMasterSample", "sample\Udp\Samples\GodSharp.UdpClientMasterSample\GodSharp.UdpClientMasterSample.csproj", "{91D1F01F-2D76-4B3C-8871-E76BC69A873B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodSharp.UdpClientSlaveSample", "GodSharp.UdpClientSlaveSample\GodSharp.UdpClientSlaveSample.csproj", "{0B4B8292-4A09-47A9-8D3E-EC56D79E0509}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GodSharp.UdpClientSlaveSample", "sample\Udp\Samples\GodSharp.UdpClientSlaveSample\GodSharp.UdpClientSlaveSample.csproj", "{6FFB5059-7BF4-49B4-BBC0-1446A48E778D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -80,10 +80,10 @@ Global
 		{91D1F01F-2D76-4B3C-8871-E76BC69A873B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91D1F01F-2D76-4B3C-8871-E76BC69A873B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91D1F01F-2D76-4B3C-8871-E76BC69A873B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0B4B8292-4A09-47A9-8D3E-EC56D79E0509}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0B4B8292-4A09-47A9-8D3E-EC56D79E0509}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0B4B8292-4A09-47A9-8D3E-EC56D79E0509}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0B4B8292-4A09-47A9-8D3E-EC56D79E0509}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FFB5059-7BF4-49B4-BBC0-1446A48E778D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FFB5059-7BF4-49B4-BBC0-1446A48E778D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FFB5059-7BF4-49B4-BBC0-1446A48E778D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FFB5059-7BF4-49B4-BBC0-1446A48E778D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -101,7 +101,7 @@ Global
 		{B1EFC930-1A12-4FA6-9BDA-EC27E477528B} = {43852E3B-E5B7-4A54-B450-4B48F6C3F025}
 		{5DD72AA1-F791-446C-9939-0CB1C5483D04} = {43852E3B-E5B7-4A54-B450-4B48F6C3F025}
 		{91D1F01F-2D76-4B3C-8871-E76BC69A873B} = {B6BB1EDD-840E-4799-BA1D-2ECED21BC443}
-		{0B4B8292-4A09-47A9-8D3E-EC56D79E0509} = {B6BB1EDD-840E-4799-BA1D-2ECED21BC443}
+		{6FFB5059-7BF4-49B4-BBC0-1446A48E778D} = {B6BB1EDD-840E-4799-BA1D-2ECED21BC443}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {68DFC265-6267-4153-8375-A35F8E5CD820}

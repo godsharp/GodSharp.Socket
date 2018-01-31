@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\GodSharp.Socket\GodSharp.Socket.csproj" />
+    <ProjectReference Include="..\..\..\..\src\GodSharp.Socket\GodSharp.Socket.csproj" />
   </ItemGroup>
 
 </Project>
