@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace GodSharp.Sockets.Internal.Extension
+namespace GodSharp.Sockets
 {
     internal static class EndPointExtension
     {

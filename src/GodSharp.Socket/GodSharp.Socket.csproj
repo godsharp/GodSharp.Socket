@@ -45,8 +45,8 @@
     <None Remove="Object\**" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="Base\SenderCollection.cs" />
-    <Compile Remove="Internal\Listener\ListenerCollection.cs" />
+    <Compile Remove="Tcp\Base\SenderCollection.cs" />
+    <Compile Remove="Tcp\Listener\ListenerCollection.cs" />
   </ItemGroup>
   
   <Import Project="..\..\build\version.props" />

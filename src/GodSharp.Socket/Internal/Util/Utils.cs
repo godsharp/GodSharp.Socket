@@ -3,7 +3,7 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace GodSharp.Sockets.Internal.Util
+namespace GodSharp.Sockets
 {
     /// <summary>
     /// Socket utils.

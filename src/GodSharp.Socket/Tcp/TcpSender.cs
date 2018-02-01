@@ -1,5 +1,4 @@
-﻿using GodSharp.Sockets.Internal.Extension;
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -9,9 +8,9 @@ namespace GodSharp.Sockets
     /// <summary>
     /// Socket sender.
     /// </summary>
-    public class Sender
+    public class TcpSender
     {
-        private Listener listener;
+        private TcpListener listener;
         private Encoding encoding;
 
         /// <summary>
@@ -39,11 +38,19 @@ namespace GodSharp.Sockets
         public EndPoint LocalEndPoint => this.listener.LocalEndPoint;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Sender"/> class.
+        /// Gets the encoding.
+        /// </summary>
+        /// <value>
+        /// The encoding.
+        /// </value>
+        public Encoding Encoding => encoding;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TcpSender"/> class.
         /// </summary>
         /// <param name="listener">The <paramref name="listener"/>.</param>
         /// <param name="encoding">The encoding.</param>
-        internal Sender(Listener listener,Encoding encoding)
+        internal TcpSender(TcpListener listener,Encoding encoding)
         {
             this.listener = listener;
             this.encoding = encoding;

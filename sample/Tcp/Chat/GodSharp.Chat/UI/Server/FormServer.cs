@@ -62,7 +62,7 @@ namespace GodSharp.Chat.Server
             btnStop.Enabled = !server.Running;
         }
         
-        private void OnConnected(Sender sender)
+        private void OnConnected(TcpSender sender)
         {
             AppendMessage(sender.RemoteEndPoint.ToString(), sender.RemoteEndPoint.ToString() + " join.", MessageType.Join);
             clientNumber = server.Clients.Count;
@@ -85,7 +85,7 @@ namespace GodSharp.Chat.Server
             Send(sender, buffer);
         }
 
-        private void OnData(Sender sender,byte[] bytes)
+        private void OnData(TcpSender sender,byte[] bytes)
         {
             byte[] tmp = sender.Guid.ToByteArray();
             byte[] buffer = new byte[tmp.Length + bytes.Length + 3];
@@ -98,7 +98,7 @@ namespace GodSharp.Chat.Server
             Send(sender, buffer);
         }
 
-        private void OnClosed(Sender sender)
+        private void OnClosed(TcpSender sender)
         {
             AppendMessage(sender.RemoteEndPoint.ToString(), sender.RemoteEndPoint.ToString() + " leave.", MessageType.Leave);
             clientNumber = server.Clients.Count;
@@ -119,14 +119,14 @@ namespace GodSharp.Chat.Server
             Send(sender, buffer);
         }
 
-        private void OnException(Sender sender, Exception exception)
+        private void OnException(TcpSender sender, Exception exception)
         {
             Debug.WriteLine($"{sender.RemoteEndPoint.ToString()} throw exception : {exception.Message},TargetSite : {exception.TargetSite}");
         }
 
-        private void Send(Sender sender, byte[] bytes)
+        private void Send(TcpSender sender, byte[] bytes)
         {
-            foreach (Sender item in server.Clients)
+            foreach (TcpSender item in server.Clients)
             {
                 if (item.Guid != sender.Guid)
                 {

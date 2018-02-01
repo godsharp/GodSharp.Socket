@@ -1,5 +1,4 @@
-﻿using GodSharp.Sockets.Internal.Extension;
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Sockets;
 
@@ -10,7 +9,7 @@ namespace GodSharp.Sockets
     /// </summary>
     public partial class SocketClient:SocketBase
     {
-        private Listener listener = null;
+        private TcpListener listener = null;
 
         /// <summary>
         /// Gets or sets the client identifier.
@@ -26,7 +25,7 @@ namespace GodSharp.Sockets
         /// <value>
         /// The sender.
         /// </value>
-        public Sender Sender => listener?.Sender;
+        public TcpSender Sender => listener?.Sender;
 
         /// <summary>
         /// Gets the remote end point.
@@ -75,7 +74,7 @@ namespace GodSharp.Sockets
 
                 listener?.Stop();
 
-                listener = new Listener(this, socket, Internal.ListenerType.Client);
+                listener = new TcpListener(this, socket, TcpListenerType.Client);
 
                 SetOnConnectedFun();
             }
@@ -111,7 +110,7 @@ namespace GodSharp.Sockets
 
                 listener?.Stop();
 
-                listener = new Listener(this, socket, Internal.ListenerType.Client);
+                listener = new TcpListener(this, socket, TcpListenerType.Client);
 
                 SetOnConnectedFun();
             }
@@ -143,7 +142,7 @@ namespace GodSharp.Sockets
 
                 listener?.Stop();
 
-                listener = new Listener(this, socket, Internal.ListenerType.Client);
+                listener = new TcpListener(this, socket, TcpListenerType.Client);
 
                 SetOnConnectedFun();
             }
@@ -181,7 +180,7 @@ namespace GodSharp.Sockets
 
                 listener?.Stop();
 
-                listener = new Listener(this, socket, Internal.ListenerType.Client);
+                listener = new TcpListener(this, socket, TcpListenerType.Client);
 
                 SetOnConnectedFun();
             }

@@ -1,8 +1,5 @@
-﻿using GodSharp.Sockets.Internal.Util;
-using System;
-using System.Net;
+﻿using System;
 using System.Net.Sockets;
-using System.Text;
 
 namespace GodSharp.Sockets
 {

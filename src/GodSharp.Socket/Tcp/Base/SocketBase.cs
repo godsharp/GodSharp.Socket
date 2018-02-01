@@ -1,5 +1,4 @@
-﻿using GodSharp.Sockets.Internal.Util;
-using System;
+﻿using System;
 using System.Net.Sockets;
 using System.Text;
 
@@ -69,7 +68,7 @@ namespace GodSharp.Sockets
         /// <value>
         /// The on connected.
         /// </value>
-        public Action<Sender> OnConnected { get; set; } = null;
+        public Action<TcpSender> OnConnected { get; set; } = null;
 
         /// <summary>
         /// Gets or sets the on data.
@@ -77,7 +76,7 @@ namespace GodSharp.Sockets
         /// <value>
         /// The on data.
         /// </value>
-        public Action<Sender, byte[]> OnData { get; set; } = null;
+        public Action<TcpSender, byte[]> OnData { get; set; } = null;
 
         /// <summary>
         /// Gets or sets the on exception.
@@ -85,7 +84,7 @@ namespace GodSharp.Sockets
         /// <value>
         /// The on exception.
         /// </value>
-        public Action<Sender, Exception> OnException { get; set; } = null;
+        public Action<TcpSender, Exception> OnException { get; set; } = null;
 
         /// <summary>
         /// Gets or sets the on closed.
@@ -93,7 +92,7 @@ namespace GodSharp.Sockets
         /// <value>
         /// The on closed.
         /// </value>
-        public Action<Sender> OnClosed { get; set; } = null;
+        public Action<TcpSender> OnClosed { get; set; } = null;
 
         /// <summary>
         /// Start Socket.

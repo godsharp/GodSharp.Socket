@@ -101,7 +101,7 @@ namespace GodSharp.Chat.Client
             this.tsmiServerDisconnect.Enabled = connected;
         }
 
-        private void OnConnected(Sender sender)
+        private void OnConnected(TcpSender sender)
         {
             Debug.WriteLine($"connected to server {sender.RemoteEndPoint}");
 
@@ -109,7 +109,7 @@ namespace GodSharp.Chat.Client
             //AppendMessage(sender.LocalEndPoint.ToString(), "join(you).", MessageType.Join, true);
         }
         
-        private void OnData(Sender sender, byte[] bytes)
+        private void OnData(TcpSender sender, byte[] bytes)
         {
             length = bytes.Length;
             if (bytes[0]==0x02)
@@ -160,7 +160,7 @@ namespace GodSharp.Chat.Client
             }
         }
 
-        private void OnClosed(Sender sender)
+        private void OnClosed(TcpSender sender)
         {
             Debug.WriteLine($"disconnect from server {sender.RemoteEndPoint}");
             //AppendMessage(sender.LocalEndPoint.ToString(), "leave(you).", MessageType.Leave, true);
@@ -169,7 +169,7 @@ namespace GodSharp.Chat.Client
             SetSendButton(false);
         }
 
-        private void OnException(Sender sender, Exception exception)
+        private void OnException(TcpSender sender, Exception exception)
         {
             Debug.WriteLine($"{sender.RemoteEndPoint.ToString()} throw exception : {exception.Message},TargetSite : {exception.TargetSite}");
         }

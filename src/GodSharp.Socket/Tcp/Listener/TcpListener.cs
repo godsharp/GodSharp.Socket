@@ -1,13 +1,14 @@
-﻿using GodSharp.Sockets.Internal;
-using GodSharp.Sockets.Internal.Util;
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
 namespace GodSharp.Sockets
 {
-    internal class Listener
+    /// <summary>
+    /// Tcp Listener
+    /// </summary>
+    internal class TcpListener
     {
         /// <summary>
         /// Gets the unique identifier.
@@ -18,7 +19,7 @@ namespace GodSharp.Sockets
         public Guid Guid { get; private set; }
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="Listener"/> is running.
+        /// Gets a value indicating whether this <see cref="TcpListener"/> is running.
         /// </summary>
         /// <value>
         ///   <c>true</c> if running; otherwise, <c>false</c>.
@@ -26,7 +27,7 @@ namespace GodSharp.Sockets
         public bool Running { get; private set; }
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="Listener"/> is connected.
+        /// Gets a value indicating whether this <see cref="TcpListener"/> is connected.
         /// </summary>
         /// <value>
         ///   <c>true</c> if connected; otherwise, <c>false</c>.
@@ -55,7 +56,7 @@ namespace GodSharp.Sockets
         /// <value>
         /// The sender.
         /// </value>
-        public Sender Sender { get; private set; }
+        public TcpSender Sender { get; private set; }
 
         /// <summary>
         /// Gets the socket.
@@ -69,16 +70,16 @@ namespace GodSharp.Sockets
         private Thread threadHandle = null;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Listener"/> class.
+        /// Initializes a new instance of the <see cref="TcpListener"/> class.
         /// </summary>
         /// <param name="_base">The base.</param>
         /// <param name="socket">The socket.</param>
         /// <param name="type">The type.</param>
-        internal Listener(SocketBase _base,Socket socket, ListenerType type)
+        internal TcpListener(SocketBase _base,Socket socket, TcpListenerType type)
         {
             parent = _base;
 
-            byte[] gb = Utils.Md5(type == ListenerType.Server ? socket.RemoteEndPoint.ToString() : socket.LocalEndPoint.ToString());
+            byte[] gb = Utils.Md5(type == TcpListenerType.Server ? socket.RemoteEndPoint.ToString() : socket.LocalEndPoint.ToString());
 
             this.Guid = new Guid(gb);
             this.Socket = socket;
@@ -86,7 +87,7 @@ namespace GodSharp.Sockets
             RemoteEndPoint = this.Socket.RemoteEndPoint;
             LocalEndPoint = this.Socket.LocalEndPoint;
 
-            Sender = new Sender(this, parent.Encoding);
+            Sender = new TcpSender(this, parent.Encoding);
         }
 
         /// <summary>
@@ -196,14 +197,16 @@ namespace GodSharp.Sockets
 #if DEBUG
                             Console.WriteLine(ex.Message);
 #endif
-                            parent.OnException?.Invoke(Sender, ex);
-
                             if (ex.SocketErrorCode == SocketError.ConnectionReset || ex.SocketErrorCode == SocketError.ConnectionAborted)
                             {
 #if DEBUG
                                 Console.WriteLine($"Server {RemoteEndPoint} offline by {(SocketError)ex.SocketErrorCode}.");
 #endif
                                 break;
+                            }
+                            else
+                            {
+                                parent.OnException?.Invoke(Sender, ex);
                             }
                         }
                         catch (Exception ex)

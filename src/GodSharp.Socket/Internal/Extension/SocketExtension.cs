@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-namespace GodSharp.Sockets.Internal.Extension
+namespace GodSharp.Sockets
 {
     internal static class SocketExtension
     {

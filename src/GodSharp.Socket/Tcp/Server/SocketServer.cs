@@ -1,5 +1,4 @@
-﻿using GodSharp.Sockets.Internal.Extension;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -12,9 +11,9 @@ namespace GodSharp.Sockets
     /// </summary>
     public partial class SocketServer:SocketBase
     {
-        private Dictionary<Guid, Listener> listeners;
+        private Dictionary<Guid, TcpListener> listeners;
         private Dictionary<string, Guid> clientMap;
-        private List<Sender> clients;
+        private List<TcpSender> clients;
 
         /// <summary>
         /// Gets or sets the server identifier.
@@ -38,7 +37,7 @@ namespace GodSharp.Sockets
         /// <value>
         /// The clients.
         /// </value>
-        public List<Sender> Clients { get => clients; }
+        public List<TcpSender> Clients { get => clients; }
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="SocketServer"/> is blocking.
@@ -62,7 +61,7 @@ namespace GodSharp.Sockets
         /// <value>
         /// The on closed.
         /// </value>
-        public new Action<Sender> OnClosed { get; set; }
+        public new Action<TcpSender> OnClosed { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SocketServer"/> class.default host is 0.0.0.0,default port is 7788.
@@ -225,9 +224,9 @@ namespace GodSharp.Sockets
         /// </summary>
         private void AcceptFun()
         {
-            listeners = new Dictionary<Guid, Listener>();
+            listeners = new Dictionary<Guid, TcpListener>();
             clientMap = new Dictionary<string, Guid>();
-            clients = new List<Sender>();
+            clients = new List<TcpSender>();
 
             while (Running)
             {
@@ -262,7 +261,7 @@ namespace GodSharp.Sockets
                         continue;
                     }
 
-                    Listener listener = new Listener(this, _socket, Internal.ListenerType.Server);
+                    TcpListener listener = new TcpListener(this, _socket, TcpListenerType.Server);
                     listener.Start();
                     
                     listeners.Add(listener.Guid, listener);
@@ -288,7 +287,7 @@ namespace GodSharp.Sockets
         /// Called when [closed fun].
         /// </summary>
         /// <param name="sender">The sender.</param>
-        private void OnClosedFun(Sender sender)
+        private void OnClosedFun(TcpSender sender)
         {
             string id = $"{sender.LocalEndPoint.GetHost()}:{sender.LocalEndPoint.GetPort()}";
 
@@ -311,28 +310,28 @@ namespace GodSharp.Sockets
         }
 
         /// <summary>
-        /// Gets the <see cref="Sender"/> with the specified unique identifier.
+        /// Gets the <see cref="TcpSender"/> with the specified unique identifier.
         /// </summary>
         /// <value>
-        /// The <see cref="Sender"/>.
+        /// The <see cref="TcpSender"/>.
         /// </value>
         /// <param name="guid">The unique identifier.</param>
         /// <returns></returns>
-        public Sender this[Guid guid]
+        public TcpSender this[Guid guid]
         {
             get { return this.listeners[guid].Sender; }
         }
 
         /// <summary>
-        /// Gets the <see cref="Sender"/> with the specified host.
+        /// Gets the <see cref="TcpSender"/> with the specified host.
         /// </summary>
         /// <value>
-        /// The <see cref="Sender"/>.
+        /// The <see cref="TcpSender"/>.
         /// </value>
         /// <param name="host">The host.</param>
         /// <param name="port">The port.</param>
         /// <returns></returns>
-        public Sender this[string host, int port]
+        public TcpSender this[string host, int port]
         {
             get
             {
@@ -355,14 +354,14 @@ namespace GodSharp.Sockets
         }
 
         /// <summary>
-        /// Gets or sets the <see cref="GodSharp.Sockets.Sender" /> at the specified index.
+        /// Gets or sets the <see cref="GodSharp.Sockets.TcpSender" /> at the specified index.
         /// </summary>
         /// <value>
-        /// The <see cref="GodSharp.Sockets.Sender" />.
+        /// The <see cref="GodSharp.Sockets.TcpSender" />.
         /// </value>
         /// <param name="index">The index.</param>
         /// <returns></returns>
-        public Sender this[int index]
+        public TcpSender this[int index]
         {
             get
             {

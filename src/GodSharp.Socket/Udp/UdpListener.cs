@@ -1,5 +1,4 @@
-﻿using GodSharp.Sockets.Internal.Util;
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -21,7 +20,7 @@ namespace GodSharp.Sockets
         public Guid Guid { get; private set; }
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="Listener"/> is running.
+        /// Gets a value indicating whether this <see cref="TcpListener"/> is running.
         /// </summary>
         /// <value>
         ///   <c>true</c> if running; otherwise, <c>false</c>.
