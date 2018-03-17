@@ -174,11 +174,11 @@ namespace GodSharp.Sockets
                 int length;
                 while (Running && Connected)
                 {
-                    if (Socket.Poll(-1, SelectMode.SelectRead))
+                    try
                     {
-                        try
+                        if (Socket.Poll(-1, SelectMode.SelectRead))
                         {
-                            data = new byte[1024];
+                            data = new byte[Socket.ReceiveBufferSize];
                             length = -1;
                             length = Socket.Receive(data);
 
@@ -192,43 +192,43 @@ namespace GodSharp.Sockets
 
                             parent.OnData?.Invoke(Sender, tmp);
                         }
-                        catch (SocketException ex)
-                        {
-#if DEBUG
-                            Console.WriteLine(ex.Message);
-#endif
-                            if (ex.SocketErrorCode == SocketError.ConnectionReset || ex.SocketErrorCode == SocketError.ConnectionAborted)
-                            {
-#if DEBUG
-                                Console.WriteLine($"Server {RemoteEndPoint} offline by {(SocketError)ex.SocketErrorCode}.");
-#endif
-                                break;
-                            }
-                            else
-                            {
-                                parent.OnException?.Invoke(Sender, ex);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-#if DEBUG
-                            Console.WriteLine(ex.Message);
-#endif
-                            parent.OnException?.Invoke(Sender, ex);
-                            continue;
-                        }
-
-                        Thread.Sleep(10);
                     }
+                    catch (SocketException ex)
+                    {
+#if DEBUG
+                        Console.WriteLine(ex.Message);
+#endif
+                        if (ex.SocketErrorCode == SocketError.ConnectionReset || ex.SocketErrorCode == SocketError.ConnectionAborted)
+                        {
+#if DEBUG
+                            Console.WriteLine($"Server {RemoteEndPoint} offline by {(SocketError)ex.SocketErrorCode}.");
+#endif
+                            break;
+                        }
+                        else
+                        {
+                            parent.OnException?.Invoke(Sender, ex);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+#if DEBUG
+                        Console.WriteLine(ex.Message);
+#endif
+                        parent.OnException?.Invoke(Sender, ex);
+                        continue;
+                    }
+
+                    Thread.Sleep(10);
                 }
 
                 Running = false;
 
-                if (Socket?.Connected==true)
+                if (Socket?.Connected == true)
                 {
                     Socket.Shutdown(SocketShutdown.Both);
                     Socket.Disconnect(true);
-                    Socket.Close(); 
+                    Socket.Close();
                 }
 
 #if DEBUG

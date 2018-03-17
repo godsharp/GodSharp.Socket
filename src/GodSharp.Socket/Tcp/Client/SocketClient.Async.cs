@@ -7,16 +7,16 @@ namespace GodSharp.Sockets
         /// <summary>
         /// Connects this instance.
         /// </summary>
-        public void ConnectAsync(SocketAsyncEventArgs e)
-        {
-            if (Connected)
-            {
-                return;
-            }
+        //public void ConnectAsync(SocketAsyncEventArgs e)
+        //{
+        //    if (Connected)
+        //    {
+        //        return;
+        //    }
 
-            socket.ConnectAsync(e);
+        //    socket.ConnectAsync(e);
 
-            SetOnConnectedFun();
-        }
+        //    SetOnConnectedFun();
+        //}
     }
 }

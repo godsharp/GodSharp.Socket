@@ -93,7 +93,7 @@ namespace GodSharp.Sockets
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Client"/> class.
+        /// Initializes a new instance of the <see cref="SocketServer"/> class.
         /// </summary>
         /// <param name="host">The host.</param>
         /// <param name="port">The port.</param>
