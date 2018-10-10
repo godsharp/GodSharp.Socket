@@ -36,6 +36,11 @@ namespace GodSharp.Sockets
         public EndPoint RemoteEndPoint => socket.RemoteEndPoint;
 
         /// <summary>
+        /// Local Port
+        /// </summary>
+        public int LocalPort { get; set; } = 0;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SocketClient"/> class.
         /// </summary>
         public SocketClient()
@@ -43,7 +48,7 @@ namespace GodSharp.Sockets
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Client"/> class.
+        /// Initializes a new instance of the <see cref="SocketClient"/> class.
         /// </summary>
         /// <param name="host">The host.</param>
         /// <param name="port">The port.</param>
@@ -52,6 +57,31 @@ namespace GodSharp.Sockets
             SetHost(host);
 
             SetPort(port);
+
+            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SocketClient"/> class.
+        /// </summary>
+        /// <param name="host">The host.</param>
+        /// <param name="port">The port.</param>
+        /// <param name="localPort">The local port.</param>
+        public SocketClient(string host, int port, int localPort)
+        {
+            SetHost(host);
+
+            SetPort(port);
+
+            Exception ex = Utils.ValidatePort(localPort);
+            if (ex == null)
+            {
+                LocalPort = localPort;
+            }
+            else
+            {
+                throw ex;
+            }
 
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         }
@@ -137,6 +167,14 @@ namespace GodSharp.Sockets
                 SetHost(host);
 
                 SetPort(port);
+
+                // bind local port
+                if (LocalPort > 0)
+                {
+                    EndPoint endPoint = new IPEndPoint(IPAddress.Any, LocalPort);
+
+                    socket.Bind(endPoint);
+                }
 
                 socket.Connect(Host, Port);
 

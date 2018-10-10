@@ -32,7 +32,7 @@ namespace GodSharp.Chat.Server
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-            if (server?.Running==true)
+            if (server?.Running == true)
             {
                 return;
             }
@@ -58,8 +58,8 @@ namespace GodSharp.Chat.Server
                 server.Stop();
             }
 
-            btnStart.Enabled = server.Running;
-            btnStop.Enabled = !server.Running;
+            btnStart.Enabled = !server.Running;
+            btnStop.Enabled = server.Running;
         }
         
         private void OnConnected(TcpSender sender)

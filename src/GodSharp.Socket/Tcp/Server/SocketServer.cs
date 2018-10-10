@@ -182,18 +182,35 @@ namespace GodSharp.Sockets
         {
             try
             {
+                Running = false;
+
                 foreach (var item in listeners)
                 {
-                    item.Value?.Stop();
+                    try
+                    {
+                        item.Value?.Stop();
+                    }
+                    catch (Exception ex)
+                    {
+#if DEBUG
+                        Console.WriteLine(ex.Message);
+#endif
+                    }
                 }
 
                 clients.Clear();
                 clientMap.Clear();
                 listeners.Clear();
 
-                if (socket.Connected)
+                try
                 {
                     socket.Close();
+                }
+                catch (Exception ex)
+                {
+#if DEBUG
+                    Console.WriteLine(ex.Message);
+#endif
                 }
             }
             catch (Exception ex)
@@ -232,7 +249,19 @@ namespace GodSharp.Sockets
             {
                 try
                 {
-                    Socket _socket = socket.Accept();
+                    Socket _socket = null;
+                    try
+                    {
+                        _socket = socket.Accept();
+                    }
+                    catch (Exception ex)
+                    {
+#if DEBUG
+                        Console.WriteLine(ex.Message);
+#endif
+                    }
+
+                    if (!Running) break;
 
                     // keep alive
                     if (KeepAlive)
@@ -280,6 +309,7 @@ namespace GodSharp.Sockets
                     throw new Exception(ex.Message, ex);
                 }
             }
+
             Running = false;
         }
 
