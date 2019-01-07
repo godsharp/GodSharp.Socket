@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Sockets;
+using System.Text;
 
 namespace GodSharp.Sockets
 {
@@ -34,6 +35,15 @@ namespace GodSharp.Sockets
         public static int Send(this ITcpConnection connection, byte[] buffer) => OnSend(connection, () => connection.Instance.Send(buffer), -1);
 
         /// <summary>
+        /// Sends the specified string.
+        /// </summary>
+        /// <param name="connection">The connection.</param>
+        /// <param name="str">The string.</param>
+        /// <param name="encoding">The encoding.</param>
+        /// <returns></returns>
+        public static int Send(this ITcpConnection connection, string str, Encoding encoding = null) => OnSend(connection, () => connection.Instance.Send(str, encoding), -1);
+
+        /// <summary>
         /// Sends the specified buffer.
         /// </summary>
         /// <param name="connection">The connection.</param>
@@ -52,6 +62,18 @@ namespace GodSharp.Sockets
         /// <returns></returns>
         public static bool SendAsync(this ITcpConnection connection, SocketAsyncEventArgs e) => OnSend(connection, () => connection.Instance.SendAsync(e), false);
 
+        /// <summary>
+        /// Begins the send.
+        /// </summary>
+        /// <param name="connection">The connection.</param>
+        /// <param name="buffer">The buffer.</param>
+        /// <param name="offset">The offset.</param>
+        /// <param name="size">The size.</param>
+        /// <param name="socketFlags">The socket flags.</param>
+        /// <param name="errorCode">The error code.</param>
+        /// <param name="callback">The callback.</param>
+        /// <param name="state">The state.</param>
+        /// <returns></returns>
         public static IAsyncResult BeginSend(this ITcpConnection connection, byte[] buffer, int offset, int size, SocketFlags socketFlags, out SocketError errorCode, AsyncCallback callback, object state)
         {
             errorCode = SocketError.Success;
@@ -60,6 +82,17 @@ namespace GodSharp.Sockets
 
             return connection.Instance.BeginSend(buffer, offset, size, socketFlags, out errorCode, callback, state);
         }
+
+        /// <summary>
+        /// Begins the send.
+        /// </summary>
+        /// <param name="connection">The connection.</param>
+        /// <param name="str">The string.</param>
+        /// <param name="callback">The callback.</param>
+        /// <param name="state">The state.</param>
+        /// <param name="encoding">The encoding.</param>
+        /// <returns></returns>
+        public static IAsyncResult BeginSend(this ITcpConnection connection, string str, AsyncCallback callback, object state, Encoding encoding = null) => OnSend(connection, () => connection.Instance.BeginSend(str, callback, state, encoding), null);
 
         /// <summary>
         /// Ends the send.

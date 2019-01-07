@@ -16,7 +16,7 @@ A easy to use socket server and client for .NET.
 
 # Getting Started
 
-See [samples](./src/samples).
+See [samples](./samples).
 
 [0]: https://github.com/godsharp/GodSharp.Socket
 [si]: https://img.shields.io/github/languages/code-size/godsharp/GodSharp.Socket.svg?style=flat-square

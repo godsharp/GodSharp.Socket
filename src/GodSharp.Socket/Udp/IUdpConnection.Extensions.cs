@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 
 namespace GodSharp.Sockets
 {
@@ -39,6 +40,15 @@ namespace GodSharp.Sockets
         /// Sends to.
         /// </summary>
         /// <param name="connection">The connection.</param>
+        /// <param name="str">The string.</param>
+        /// <param name="remoteEP">The remote ep.</param>
+        /// <returns></returns>
+        public static int SendTo(this IUdpConnection connection, string str, EndPoint remoteEP) => OnSend(connection, () => connection.Instance.SendTo(str, remoteEP), -1);
+
+        /// <summary>
+        /// Sends to.
+        /// </summary>
+        /// <param name="connection">The connection.</param>
         /// <param name="buffer">The buffer.</param>
         /// <param name="offset">The offset.</param>
         /// <param name="size">The size.</param>
@@ -68,6 +78,29 @@ namespace GodSharp.Sockets
         /// <param name="state">The state.</param>
         /// <returns></returns>
         public static IAsyncResult BeginSendTo(this IUdpConnection connection, byte[] buffer, int offset, int size, SocketFlags socketFlags, EndPoint remoteEP, AsyncCallback callback, object state) => OnSend(connection, () => connection.Instance.BeginSendTo(buffer, offset, size, socketFlags, remoteEP, callback, state), null);
+
+        /// <summary>
+        /// Begins the send to.
+        /// </summary>
+        /// <param name="connection">The connection.</param>
+        /// <param name="buffer">The buffer.</param>
+        /// <param name="remoteEP">The remote ep.</param>
+        /// <param name="callback">The callback.</param>
+        /// <param name="state">The state.</param>
+        /// <returns></returns>
+        public static IAsyncResult BeginSendTo(this IUdpConnection connection, byte[] buffer, EndPoint remoteEP, AsyncCallback callback, object state) => OnSend(connection, () => connection.Instance.BeginSendTo(buffer, remoteEP, callback, state), null);
+
+        /// <summary>
+        /// Begins the send to.
+        /// </summary>
+        /// <param name="connection">The connection.</param>
+        /// <param name="str">The string.</param>
+        /// <param name="remoteEP">The remote ep.</param>
+        /// <param name="callback">The callback.</param>
+        /// <param name="state">The state.</param>
+        /// <param name="encoding">The encoding.</param>
+        /// <returns></returns>
+        public static IAsyncResult BeginSendTo(this IUdpConnection connection, string str, EndPoint remoteEP, AsyncCallback callback, object state, Encoding encoding = null) => OnSend(connection, () => connection.Instance.BeginSendTo(str, remoteEP, callback, state, encoding), null);
 
         /// <summary>
         /// Ends the send.

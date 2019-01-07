@@ -40,7 +40,7 @@ namespace GodSharp.Socket.TcpServerSample
                     Console.WriteLine($"{c.RemoteEndPoint} exception:{c.Exception.StackTrace.ToString()}.");
                 }
             };
-
+            
             server.Start();
 
             Console.WriteLine("GodSharp.Socket.TcpServer Started!");
