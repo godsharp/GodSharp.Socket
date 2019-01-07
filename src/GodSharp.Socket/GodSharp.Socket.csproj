@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <RootNamespace>GodSharp.Sockets</RootNamespace>
@@ -11,7 +11,7 @@
     <PackageIconUrl>https://avatars3.githubusercontent.com/u/26563296</PackageIconUrl>
     <PackageLicenseUrl>https://github.com/godsharp/GodSharp.Socket/blob/master/LICENSE</PackageLicenseUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Copyright>Copyright © GodSharp 2017</Copyright>
+    <Copyright>Copyright © GodSharp 2017-2019</Copyright>
     <NeutralLanguage>en-US</NeutralLanguage>
     <Description>A easy to used socket server and client for .NET.</Description>
     <OutputPath>$(SolutionDir)\output\$(AssemblyName)</OutputPath>
@@ -39,15 +39,6 @@
   <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
     <DefineConstants>NETSTANDARD2_0;$(AdditionalConstants)</DefineConstants>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="Object\**" />
-    <EmbeddedResource Remove="Object\**" />
-    <None Remove="Object\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Tcp\Base\SenderCollection.cs" />
-    <Compile Remove="Tcp\Listener\ListenerCollection.cs" />
-  </ItemGroup>
   
   <Import Project="..\..\build\version.props" />
 </Project>

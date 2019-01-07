@@ -1,295 +1,68 @@
-﻿using System;
+﻿using GodSharp.Sockets.Abstractions;
+using GodSharp.Sockets.Extensions;
+using GodSharp.Sockets.Udp;
+using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 
 namespace GodSharp.Sockets
 {
-    /// <summary>
-    /// Socket udp client
-    /// </summary>
-    public partial class UdpClient
+    public sealed class UdpClient : NetBase<IUdpConnection,NetClientEventArgs<IUdpConnection>>, IUdpClient, IDisposable
     {
-        private bool initialized;
+        public override bool Running => Connection?.Listener?.Running == true;
 
-        /// <summary>
-        /// The socket
-        /// </summary>
-        internal Socket socket = null;
+        public override string Key => Connection.Key;
 
-        /// <summary>
-        /// The listener
-        /// </summary>
-        private UdpListener listener;
+        public override string Name => Connection.Name;
 
-        private AddressFamily family { get; set; }
+        public override int Id => Connection.Id;
 
-        #region Properties
-        /// <summary>
-        /// Gets or sets the local port.
-        /// </summary>
-        /// <value>
-        /// The local port, default is 3030.
-        /// </value>
-        public int LocalPort { get; set; }
+        private UdpConnection connection { get; set; }
+        public IUdpConnection Connection => connection;
 
-        /// <summary>
-        /// Gets or sets the remote host.
-        /// </summary>
-        /// <value>
-        /// The remote host.
-        /// </value>
-        public string Host { get; set; }
+        public UdpClient(UdpClientOptions options) => OnConstructing(options);
 
-        /// <summary>
-        /// Gets or sets the remote port.
-        /// </summary>
-        /// <value>
-        /// The remote port.
-        /// </value>
-        public int Port { get; set; }
+        public UdpClient(IPEndPoint remote, IPEndPoint local, AddressFamily family = AddressFamily.InterNetwork, string name = null, int id = 0) => OnConstructing(new UdpClientOptions(local, remote, family) { Id = id, Name = name });
 
-        /// <summary>
-        /// Gets the remote end point.
-        /// </summary>
-        /// <value>
-        /// The remote end point.
-        /// </value>
-        public EndPoint RemoteEndPoint { get; private set; }
+        public UdpClient(int localPort, string localHost = null, AddressFamily family = AddressFamily.InterNetwork, string name = null, int id = 0) => OnConstructing(new UdpClientOptions(new IPEndPoint(localHost.IsNullOrWhiteSpace() ? (family == AddressFamily.InterNetworkV6 ? IPAddress.IPv6Any : IPAddress.Any) : IPAddress.Parse(localHost), localPort), null, family) { Id = id, Name = name });
 
-        /// <summary>
-        /// Gets the local end point.
-        /// </summary>
-        /// <value>
-        /// The local end point.
-        /// </value>
-        public EndPoint LocalEndPoint => socket.LocalEndPoint;
-
-        /// <summary>
-        /// Gets the available.
-        /// </summary>
-        /// <value>
-        /// The available.
-        /// </value>
-        public int Available => socket.Available;
-
-        /// <summary>
-        /// Gets or sets the encoding.
-        /// </summary>
-        /// <value>
-        /// The encoding.
-        /// </value>
-        public Encoding Encoding { get; set; } = Encoding.Default;
-
-        /// <summary>
-        /// Gets or sets the sender.
-        /// </summary>
-        /// <value>
-        /// The sender.
-        /// </value>
-        public UdpSender Sender { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the on started.
-        /// </summary>
-        /// <value>
-        /// The on started.
-        /// </value>
-        public Action<UdpSender> OnStarted { get; set; } = null;
-
-        /// <summary>
-        /// Gets or sets the on data.
-        /// </summary>
-        /// <value>
-        /// The on data.
-        /// </value>
-        public Action<UdpSender, byte[]> OnData { get; set; } = null;
-
-        /// <summary>
-        /// Gets or sets the on exception.
-        /// </summary>
-        /// <value>
-        /// The on exception.
-        /// </value>
-        public Action<UdpSender, Exception> OnException { get; set; } = null;
-
-        /// <summary>
-        /// Gets or sets the on stopped.
-        /// </summary>
-        /// <value>
-        /// The on stopped.
-        /// </value>
-        public Action<UdpSender> OnStopped { get; set; } = null; 
-        #endregion
-
-        #region Constructors
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UdpClient"/> class.
-        /// </summary>
-        public UdpClient() : this(AddressFamily.InterNetwork)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UdpClient"/> class.
-        /// </summary>
-        public UdpClient(AddressFamily addressFamily)
-        {
-            LocalPort = 0;
-            initialized = false;
-
-            SetAddressFamily(addressFamily);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UdpClient"/> class.
-        /// </summary>
-        /// <param name="localPort">The local port.</param>
-        public UdpClient(int localPort) : this(AddressFamily.InterNetwork, localPort)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UdpClient"/> class.
-        /// </summary>
-        /// <param name="addressFamily">The address family.</param>
-        /// <param name="localPort">The local port.</param>
-        public UdpClient(AddressFamily addressFamily, int localPort) : this()
-        {
-            SetAddressFamily(addressFamily);
-
-            SetLocalPort(localPort);
-
-            Initialize();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UdpClient"/> class.
-        /// </summary>
-        /// <param name="host">The remote host.</param>
-        /// <param name="port">The remote port.</param>
-        public UdpClient(string host, int port) : this(AddressFamily.InterNetwork, host, port)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UdpClient"/> class.
-        /// </summary>
-        /// <param name="addressFamily">The address family.</param>
-        /// <param name="host">The host.</param>
-        /// <param name="port">The port.</param>
-        public UdpClient(AddressFamily addressFamily, string host, int port) : this()
-        {
-            SetAddressFamily(addressFamily);
-
-            SetHost(host);
-
-            SetPort(port);
-
-            Initialize();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UdpClient"/> class.
-        /// </summary>
-        /// <param name="host">The host.</param>
-        /// <param name="port">The port.</param>
-        /// <param name="localPort"></param>
-        public UdpClient(string host, int port, int localPort) : this(AddressFamily.InterNetwork, host, port, localPort)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UdpClient"/> class.
-        /// </summary>
-        /// <param name="addressFamily">The address family.</param>
-        /// <param name="host">The host.</param>
-        /// <param name="port">The port.</param>
-        /// <param name="localPort">The local port.</param>
-        public UdpClient(AddressFamily addressFamily, string host, int port, int localPort) : this()
-        {
-            SetAddressFamily(addressFamily);
-
-            SetHost(host);
-
-            SetPort(port);
-
-            SetLocalPort(localPort);
-
-            Initialize();
-        }
-
-        /// <summary>
-        /// Initializes this instance.
-        /// </summary>
-        /// <exception cref="System.InvalidOperationException">LocalPort</exception>
-        /// <exception cref="System.InvalidCastException">Host</exception>
-        private void Initialize()
+        public UdpClient(string remoteHost, int remotePort, int localPort = 8899, string localHost = null, AddressFamily family = AddressFamily.InterNetwork, string name = null, int id = 0)
         {
             try
             {
-                if (LocalPort < 1 && Port < 1)
-                {
-                    throw new InvalidOperationException($"{nameof(LocalPort)} and {nameof(Port)} value invalid.");
-                }
-
-                if (Port > 0 && (string.IsNullOrEmpty(Host) || Host.Trim() == ""))
-                {
-                    throw new InvalidCastException($"{nameof(Host)} value invalid.");
-                }
-
-                if (socket == null)
-                {
-                    socket = new Socket(family, SocketType.Dgram, ProtocolType.Udp);
-
-                    if (LocalPort > 0)
-                    {
-                        socket.Bind(new IPEndPoint(socket.AddressFamily == AddressFamily.InterNetworkV6 ? IPAddress.IPv6Any : IPAddress.Any, LocalPort));
-                    }
-
-                    if (Port > 0)
-                    {
-                        RemoteEndPoint = new IPEndPoint(IPAddress.Parse(Host), Port);
-                        socket.Connect(RemoteEndPoint);
-                    }
-                }
-
-                initialized = true;
+                UdpClientOptions options = new UdpClientOptions(new IPEndPoint(localHost.IsNullOrWhiteSpace() ? (family == AddressFamily.InterNetworkV6 ? IPAddress.IPv6Any : IPAddress.Any) : IPAddress.Parse(localHost), localPort), remoteHost.IsNullOrWhiteSpace() ? null : new IPEndPoint(IPAddress.Parse(remoteHost), remotePort), family) { Id = id, Name = name };
+                
+                OnConstructing(options);
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-        } 
-        #endregion
-
-        /// <summary>
-        /// Start Socket.
-        /// </summary>
-        public void Start()
-        {
-            if (!initialized)
-            {
-                Initialize();
-            }
-
-            listener = new UdpListener(socket,RemoteEndPoint, Encoding);
-            listener.OnStarted = OnStarted;
-            listener.OnData = OnData;
-            listener.OnException = OnException;
-            listener.OnStopped = OnStopped;
-
-            listener.Start();
-
-            Sender = listener.Sender;
         }
 
-        /// <summary>
-        /// Stop Socket.
-        /// </summary>
-        public void Stop()
+        private void OnConstructing(UdpClientOptions options)
         {
-            listener?.Stop();
+            if (options == null) throw new ArgumentNullException(nameof(options));
+            if (options.RemoteEndPoint == null && options.LocalEndPoint == null) throw new ArgumentNullException(nameof(options.RemoteEndPoint));
+
+            connection = new UdpConnection(options.RemoteEndPoint, options.LocalEndPoint, options.Family) { OnReceived = OnReceivedHandler, OnDisconnected = OnDisconnectedHandler, OnStarted = OnStartedHandler, OnStopped = OnStoppedHandler, OnException = OnExceptionHandler};
+
+            if (options.Id > 0) connection.Id = options.Id;
+            if (!options.Name.IsNullOrWhiteSpace()) connection.Name = options.Name;
+
+            if (options.OnReceived != null) this.OnReceived = options.OnReceived;
+            if (options.OnDisconnected != null) this.OnDisconnected = options.OnDisconnected;
+            if (options.OnStarted != null) this.OnStarted = options.OnStarted;
+            if (options.OnStopped != null) this.OnStopped = options.OnStopped;
+            if (options.OnException != null) this.OnException = options.OnException;
         }
+
+        public override void Start() => Connection?.Start();
+
+        public override void Stop() => Connection?.Stop();
+
+        protected override void OnConnectedHandler(NetClientEventArgs<IUdpConnection> args) => throw new NotSupportedException();
+
+        public override void Dispose() => this.Connection?.Dispose();
     }
 }
