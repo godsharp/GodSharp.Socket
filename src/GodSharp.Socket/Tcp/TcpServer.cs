@@ -141,12 +141,14 @@ namespace GodSharp.Sockets
             bool error = false;
             try
             {
+                if (!Running || stopping) return;
+
                 Socket socket = Instance.EndAccept(result);
 
                 if (stopping) return;
 
                 BeginAccept();
-                
+
                 ITcpConnection connection = new TcpConnection(socket) { OnConnected = OnConnectedHandler, OnReceived = OnReceivedHandler, OnDisconnected = OnDisconnectedHandler, OnException = OnExceptionHandler };
                 connection.Start();
 
@@ -178,7 +180,11 @@ namespace GodSharp.Sockets
 
             try
             {
-                if (existed) Connections[key].Stop();
+                if (existed)
+                {
+                    Connections[key].Stop();
+                    Connections[key] = null;
+                }
             }
             catch (Exception ex)
             {
