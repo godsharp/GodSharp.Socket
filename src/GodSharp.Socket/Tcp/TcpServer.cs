@@ -10,6 +10,8 @@ namespace GodSharp.Sockets
 {
     public sealed class TcpServer :NetBase<ITcpConnection, NetServerEventArgs>, ITcpServer, IDisposable
     {
+        private readonly object ConnectionsLock = new object();
+
         private bool stopping = false;
 
         private bool running;
@@ -18,8 +20,10 @@ namespace GodSharp.Sockets
         public Socket Instance { get; private set; }
 
         public IPEndPoint LocalEndPoint { get; private set; }
-
+        
         public IDictionary<string, ITcpConnection> Connections { get; private set; } = new Dictionary<string, ITcpConnection>();
+
+        public SocketEventHandler<NetServerEventArgs> OnServerException { get; set; }
 
         public TcpServer(TcpServerOptions options) => OnConstructing(options);
 
@@ -33,6 +37,7 @@ namespace GodSharp.Sockets
             }
             catch (Exception ex)
             {
+                OnServerException?.Invoke(new NetServerEventArgs(this, LocalEndPoint) { Exception = ex });
                 throw ex;
             }
         }
@@ -78,6 +83,7 @@ namespace GodSharp.Sockets
             }
             catch (Exception ex)
             {
+                OnServerException?.Invoke(new NetServerEventArgs(this, LocalEndPoint) { Exception = ex });
                 throw ex;
             }
         }
@@ -96,7 +102,7 @@ namespace GodSharp.Sockets
             }
             catch (Exception ex)
             {
-                throw ex;
+                OnServerException?.Invoke(new NetServerEventArgs(this, LocalEndPoint) { Exception = ex });
             }
         }
 
@@ -112,7 +118,7 @@ namespace GodSharp.Sockets
             }
             catch (Exception ex)
             {
-                throw ex;
+                OnServerException?.Invoke(new NetServerEventArgs(this, LocalEndPoint) { Exception = ex });
             }
             finally
             {
@@ -121,7 +127,7 @@ namespace GodSharp.Sockets
 
             running = false;
             stopping = false;
-            
+
             OnStopped?.Invoke(new NetServerEventArgs(this, LocalEndPoint));
         }
 
@@ -133,12 +139,23 @@ namespace GodSharp.Sockets
 
         private void BeginAccept()
         {
-            Instance.BeginAccept(AcceptCallback, null);
+            try
+            {
+                Instance.BeginAccept(AcceptCallback, null);
+            }
+            catch (Exception ex)
+            {
+                OnServerException?.Invoke(new NetServerEventArgs(this, LocalEndPoint) { Exception = ex });
+
+                Stop();
+            }
         }
 
         private void AcceptCallback(IAsyncResult result)
         {
-            bool error = false;
+            bool accept = false;
+            ITcpConnection connection = null;
+
             try
             {
                 if (!Running || stopping) return;
@@ -148,35 +165,38 @@ namespace GodSharp.Sockets
                 if (stopping) return;
 
                 BeginAccept();
+                accept = true;
 
-                ITcpConnection connection = new TcpConnection(socket) { OnConnected = OnConnectedHandler, OnReceived = OnReceivedHandler, OnDisconnected = OnDisconnectedHandler, OnException = OnExceptionHandler };
+                connection = new TcpConnection(socket) { OnConnected = OnConnectedHandler, OnReceived = OnReceivedHandler, OnDisconnected = OnDisconnectedHandler, OnException = OnExceptionHandler };
                 connection.Start();
 
                 RemoveListener(connection.Key);
 
-                Connections.Add(connection.Key, connection);
+                lock (ConnectionsLock)
+                {
+                    Connections.Add(connection.Key, connection);
+                }
 
                 OnConnected?.Invoke(new NetClientEventArgs<ITcpConnection>(connection));
             }
-            catch (SocketException ex)
-            {
-                error = true;
-                throw ex;
-            }
             catch (Exception ex)
             {
-                error = true;
-                throw ex;
+                OnServerException?.Invoke(new NetServerEventArgs(this, LocalEndPoint, connection) { Exception = ex });
             }
             finally
             {
-                if (error) Stop();
+                if (Running && !accept && !stopping) BeginAccept();
             }
         }
 
         private void RemoveListener(string key)
         {
-            bool existed = Connections?.ContainsKey(key) == true;
+            bool existed = false;
+
+            lock (ConnectionsLock)
+            {
+                existed = Connections?.ContainsKey(key) == true;
+            }
 
             try
             {
@@ -188,11 +208,17 @@ namespace GodSharp.Sockets
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                OnServerException?.Invoke(new NetServerEventArgs(this, LocalEndPoint) { Exception = ex });
             }
             finally
             {
-                if (existed) Connections?.Remove(key);
+                if (existed)
+                {
+                    lock (ConnectionsLock)
+                    {
+                        Connections?.Remove(key);
+                    }
+                }
             }
         }
 

@@ -100,6 +100,14 @@ namespace GodSharp.Sockets
         public ITcpServer TcpServer { get; internal set; }
 
         /// <summary>
+        /// Gets or sets the connection.
+        /// </summary>
+        /// <value>
+        /// The connection.
+        /// </value>
+        public ITcpConnection Connection { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="NetServerEventArgs"/> class.
         /// </summary>
         public NetServerEventArgs()
@@ -111,10 +119,12 @@ namespace GodSharp.Sockets
         /// </summary>
         /// <param name="tcpServer">The TCP server.</param>
         /// <param name="localEndPoint">The local end point.</param>
-        public NetServerEventArgs(ITcpServer tcpServer, IPEndPoint localEndPoint)
+        /// <param name="connection">The connection.</param>
+        public NetServerEventArgs(ITcpServer tcpServer, IPEndPoint localEndPoint = null, ITcpConnection connection = null)
         {
             if (tcpServer != null) TcpServer = tcpServer;
             if (localEndPoint != null) LocalEndPoint = localEndPoint;
+            if (connection != null) Connection = connection;
         }
     }
 }

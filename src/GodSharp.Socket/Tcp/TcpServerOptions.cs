@@ -16,6 +16,8 @@ namespace GodSharp.Sockets
 
         public SocketEventHandler<NetServerEventArgs> OnStopped { get; set; }
 
+        public SocketEventHandler<NetServerEventArgs> OnServerException { get; set; }
+
         public TcpServerOptions()
         {
         }

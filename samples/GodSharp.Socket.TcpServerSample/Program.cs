@@ -38,6 +38,10 @@ namespace GodSharp.Socket.TcpServerSample
                 OnException = (c) =>
                 {
                     Console.WriteLine($"{c.RemoteEndPoint} exception:{c.Exception.StackTrace.ToString()}.");
+                },
+                OnServerException= (c) =>
+                {
+                    Console.WriteLine($"{c.LocalEndPoint} exception:{c.Exception.StackTrace.ToString()}.");
                 }
             };
             
@@ -49,6 +53,8 @@ namespace GodSharp.Socket.TcpServerSample
 
             server.Stop();
             Console.WriteLine("GodSharp.Socket.TcpServer Stopped!");
+
+            Console.ReadLine();
         }
     }
 }

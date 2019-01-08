@@ -10,5 +10,7 @@ namespace GodSharp.Sockets
         Socket Instance { get; }
 
         IDictionary<string, ITcpConnection> Connections { get; }
+
+        SocketEventHandler<NetServerEventArgs> OnServerException { get; set; }
     }
 }

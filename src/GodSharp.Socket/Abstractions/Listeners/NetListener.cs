@@ -48,7 +48,7 @@ namespace GodSharp.Sockets.Abstractions
             Exception exception = null;
             try
             {
-                Connection?.Instance.Disconnect(true);
+                Connection?.Instance.Disconnect(false);
                 Connection?.Instance.Close();
             }
             catch (Exception ex)
