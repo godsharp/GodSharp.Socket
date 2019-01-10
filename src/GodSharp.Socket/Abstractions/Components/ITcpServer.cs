@@ -5,7 +5,7 @@ using System.Net.Sockets;
 
 namespace GodSharp.Sockets
 {
-    public interface ITcpServer : INetBase<ITcpConnection>, IDisposable
+    public interface ITcpServer : INetBase<ITcpConnection>, IEvent<ITcpConnection, NetServerEventArgs>, IDisposable
     {
         Socket Instance { get; }
 

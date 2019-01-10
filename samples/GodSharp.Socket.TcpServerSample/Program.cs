@@ -10,7 +10,7 @@ namespace GodSharp.Socket.TcpServerSample
         {
             Console.WriteLine("Hello GodSharp.Socket.TcpServerSample!");
 
-            TcpServer server = new TcpServer()
+            ITcpServer server = new TcpServer()
             {
                 OnConnected = (c) =>
                 {
