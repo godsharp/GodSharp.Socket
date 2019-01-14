@@ -3,7 +3,7 @@ using System;
 
 namespace GodSharp.Sockets
 {
-    public interface ITcpClient : INetBase<ITcpConnection>, IEvent<ITcpConnection, NetClientEventArgs<ITcpConnection>>, IDisposable
+    public interface ITcpClient : INetBase<ITcpConnection>, ITcpClientEvents, IDisposable
     {
         ITcpConnection Connection { get; }
     }

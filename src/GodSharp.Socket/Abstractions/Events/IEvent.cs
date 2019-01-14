@@ -2,7 +2,7 @@
 
 namespace GodSharp.Sockets.Abstractions
 {
-    public interface IEvent<TConnection, TEventArgs> : IDisposable
+    public interface IEvent<TConnection, TEventArgs>
         where TConnection : INetConnection
         where TEventArgs : NetEventArgs
     {
