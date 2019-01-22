@@ -9,7 +9,7 @@ namespace GodSharp.Socket.TcpClientSample
         static void Main(string[] args)
         {
             Console.WriteLine("GodSharp.TcpClient!");
-            TcpClient client = new TcpClient("127.0.0.1", 4001)
+            TcpClient client = new TcpClient("127.0.0.1", 4003)
             {
                 OnConnected = (c) =>
                 {
@@ -36,12 +36,20 @@ namespace GodSharp.Socket.TcpClientSample
                 },
                 OnException = (c) =>
                 {
-                    Console.WriteLine($"{c.RemoteEndPoint} exception:{c.Exception.StackTrace.ToString()}.");
+                    Console.WriteLine($"{c.RemoteEndPoint} exception:Message:{c.Exception.Message},StackTrace:{c.Exception.StackTrace.ToString()}.");
                 }
             };
 
-            client.Start();
-            Console.WriteLine("Started");
+            try
+            {
+                client.Start();
+
+                Console.WriteLine("Started");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Message:{ex.Message},StackTrace:{ex.StackTrace.ToString()}");
+            }
             
             Console.ReadLine();
             

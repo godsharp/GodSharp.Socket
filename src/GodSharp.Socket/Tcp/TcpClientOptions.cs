@@ -5,7 +5,7 @@ namespace GodSharp.Sockets
 {
     public class TcpClientOptions: NetOptions<ITcpConnection>
     {
-        public int ConnectTimeout { get; set; } = 3000;
+        public int ConnectTimeout { get; set; } = 30000;
         
         public IPEndPoint RemoteEndPoint { get; set; }
 

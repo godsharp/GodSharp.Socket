@@ -3,6 +3,7 @@ using GodSharp.Sockets.Extensions;
 using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace GodSharp.Sockets.Tcp
 {
@@ -87,6 +88,8 @@ namespace GodSharp.Sockets.Tcp
             catch (Exception ex)
             {
                 OnException?.Invoke(new NetClientEventArgs<ITcpConnection>(this) { Exception = ex });
+
+                if (!connected) throw ex;
             }
         }
 
@@ -107,15 +110,25 @@ namespace GodSharp.Sockets.Tcp
             }
         }
 
-        private bool Connect(int millisecondsTimeout = 3000)
+        private bool Connect(int millisecondsTimeout = 30000)
         {
-            IAsyncResult result = Instance.BeginConnect(this.RemoteEndPoint.As(), ConnectCallback, null);
+            ConnectionData data = new ConnectionData();
 
-            return result.AsyncWaitHandle.WaitOne(millisecondsTimeout);
+            Instance.BeginConnect(this.RemoteEndPoint.As(), ConnectCallback, data);
+
+            bool ret = data.WaitOne(millisecondsTimeout);
+
+            if (!ret) throw new SocketException((int)SocketError.TimedOut);
+
+            if (!data.Connected && data.Exception != null) throw data.Exception;
+
+            return data.Connected;
         }
 
         private void ConnectCallback(IAsyncResult result)
         {
+            ConnectionData data = result.AsyncState as ConnectionData;
+
             try
             {
                 Instance.EndConnect(result);
@@ -126,17 +139,44 @@ namespace GodSharp.Sockets.Tcp
                 this.LocalEndPoint = Instance.LocalEndPoint.As();
 
                 OnConnected?.Invoke(new NetClientEventArgs<ITcpConnection>(this));
-            }
-            catch (SocketException ex)
-            {
-                throw ex;
+
+                data.Connected = true;
             }
             catch (Exception ex)
             {
-                throw ex;
+                data.Connected = false;
+                data.Exception = ex;
+            }
+            finally
+            {
+                data.Set();
             }
         }
 
         public override void Dispose() => Listener?.Dispose();
+
+        private class ConnectionData
+        {
+            private ManualResetEvent reset { get; set; }
+
+            public bool Connected { get; set; }
+
+            public Exception Exception { get; set; }
+
+            public bool WaitOne(int millisecondsTimeout = 3000) => reset.WaitOne(millisecondsTimeout);
+
+            public void Set() => reset.Set();
+
+            public ConnectionData()
+            {
+                reset = new ManualResetEvent(false);
+            }
+
+            public ConnectionData(bool connected, Exception exception = null)
+            {
+                Connected = connected;
+                Exception = exception;
+            }
+        }
     }
 }
