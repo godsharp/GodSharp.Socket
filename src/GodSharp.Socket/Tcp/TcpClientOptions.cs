@@ -5,7 +5,7 @@ namespace GodSharp.Sockets
 {
     public class TcpClientOptions: NetOptions<ITcpConnection>
     {
-        public int ConnectTimeout { get; set; } = 30000;
+        public int ConnectTimeout { get; set; } = -1;
         
         public IPEndPoint RemoteEndPoint { get; set; }
 
@@ -19,7 +19,7 @@ namespace GodSharp.Sockets
         {
         }
 
-        public TcpClientOptions(IPEndPoint localEndPoint, IPEndPoint remoteEndPoint, SocketEventHandler<NetClientReceivedEventArgs<ITcpConnection>> handler = null)
+        public TcpClientOptions(IPEndPoint remoteEndPoint, IPEndPoint localEndPoint = null, SocketEventHandler<NetClientReceivedEventArgs<ITcpConnection>> handler = null)
         {
             if (localEndPoint != null) LocalEndPoint = localEndPoint;
             if (remoteEndPoint != null) RemoteEndPoint = remoteEndPoint;

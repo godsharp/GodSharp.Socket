@@ -110,28 +110,39 @@ namespace GodSharp.Sockets.Tcp
             }
         }
 
-        private bool Connect(int millisecondsTimeout = 30000)
+        private bool Connect(int millisecondsTimeout = -1)
         {
             ConnectionData data = new ConnectionData();
 
             Instance.BeginConnect(this.RemoteEndPoint.As(), ConnectCallback, data);
 
-            bool ret = data.WaitOne(millisecondsTimeout);
+            bool ret = data.WaitConnected(millisecondsTimeout);
+
+            if (!ret) data.Connected = ret;
+
+            data.WaitCompleted();
 
             if (!ret) throw new SocketException((int)SocketError.TimedOut);
 
-            if (!data.Connected && data.Exception != null) throw data.Exception;
+            if (data.Connected == false && data.Exception != null) throw data.Exception;
 
-            return data.Connected;
+            return data.Connected == true;
         }
 
         private void ConnectCallback(IAsyncResult result)
         {
             ConnectionData data = result.AsyncState as ConnectionData;
+            bool? connected = null;
+
+            data.SetConnected();
 
             try
             {
                 Instance.EndConnect(result);
+
+                connected = false;
+
+                if (data.Connected == false) return;
 
                 Console.WriteLine("tcp.client connected");
 
@@ -141,6 +152,7 @@ namespace GodSharp.Sockets.Tcp
                 OnConnected?.Invoke(new NetClientEventArgs<ITcpConnection>(this));
 
                 data.Connected = true;
+                connected = true;
             }
             catch (Exception ex)
             {
@@ -149,7 +161,21 @@ namespace GodSharp.Sockets.Tcp
             }
             finally
             {
-                data.Set();
+                Console.WriteLine($"tcp.client ConnectCallback connected:{connected}");
+
+                if (connected == false && data.Connected == false)
+                {
+                    try
+                    {
+                        Instance.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        data.Exception = data.Exception ?? ex;
+                    }
+                }
+
+                data.SetCompleted();
             }
         }
 
@@ -157,19 +183,25 @@ namespace GodSharp.Sockets.Tcp
 
         private class ConnectionData
         {
-            private ManualResetEvent reset { get; set; }
+            private EventWaitHandle ConnectedWaitHandle { get; set; }
+            private EventWaitHandle CompletedWaitHandle { get; set; }
 
-            public bool Connected { get; set; }
+            public bool? Connected { get; set; }
 
             public Exception Exception { get; set; }
 
-            public bool WaitOne(int millisecondsTimeout = 3000) => reset.WaitOne(millisecondsTimeout);
+            public bool WaitConnected(int millisecondsTimeout = -1) => millisecondsTimeout < 1 ? ConnectedWaitHandle.WaitOne() : ConnectedWaitHandle.WaitOne(millisecondsTimeout);
 
-            public void Set() => reset.Set();
+            public void SetConnected() => ConnectedWaitHandle.Set();
+
+            public bool WaitCompleted() => CompletedWaitHandle.WaitOne();
+
+            public bool SetCompleted() => CompletedWaitHandle.Set();
 
             public ConnectionData()
             {
-                reset = new ManualResetEvent(false);
+                ConnectedWaitHandle = new ManualResetEvent(false);
+                CompletedWaitHandle = new ManualResetEvent(false);
             }
 
             public ConnectionData(bool connected, Exception exception = null)

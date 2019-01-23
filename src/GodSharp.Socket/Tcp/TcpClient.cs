@@ -22,11 +22,11 @@ namespace GodSharp.Sockets
 
         public TcpClient(TcpClientOptions options) => OnConstructing(options);
 
-        public TcpClient(string remoteHost, int remotePort, int localPort = 0, string localHost = null, int connectTimeout = 30000, string name = null, int id = 0)
+        public TcpClient(string remoteHost, int remotePort, int localPort = 0, string localHost = null, int connectTimeout = -1, string name = null, int id = 0)
         {
             try
             {
-                TcpClientOptions options = new TcpClientOptions() { ConnectTimeout = 30000 , Id = id, Name = name };
+                TcpClientOptions options = new TcpClientOptions() { Id = id, Name = name };
                 if (connectTimeout > 0) options.ConnectTimeout = connectTimeout;
 
                 options.RemoteEndPoint = new IPEndPoint(IPAddress.Parse(remoteHost), remotePort);
@@ -45,7 +45,7 @@ namespace GodSharp.Sockets
             if (options == null) throw new ArgumentNullException(nameof(options));
             if (options.RemoteEndPoint == null) throw new ArgumentNullException(nameof(options.RemoteEndPoint));
 
-            connection = new TcpConnection(options.RemoteEndPoint, options.LocalEndPoint) { OnConnected = OnConnectedHandler, OnReceived = OnReceivedHandler, OnDisconnected = OnDisconnectedHandler, OnStarted = OnStartedHandler, OnStopped = OnStoppedHandler, OnException = OnExceptionHandler, ConnectTimeout = options.ConnectTimeout > 0 ? options.ConnectTimeout : 30000 };
+            connection = new TcpConnection(options.RemoteEndPoint, options.LocalEndPoint) { OnConnected = OnConnectedHandler, OnReceived = OnReceivedHandler, OnDisconnected = OnDisconnectedHandler, OnStarted = OnStartedHandler, OnStopped = OnStoppedHandler, OnException = OnExceptionHandler, ConnectTimeout =  options.ConnectTimeout };
 
             if (options.Id > 0) connection.Id = options.Id;
             if (!options.Name.IsNullOrWhiteSpace()) connection.Name = options.Name;
