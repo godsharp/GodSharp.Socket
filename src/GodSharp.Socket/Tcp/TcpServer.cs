@@ -3,6 +3,7 @@ using GodSharp.Sockets.Extensions;
 using GodSharp.Sockets.Tcp;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 
@@ -112,23 +113,53 @@ namespace GodSharp.Sockets
 
             stopping = true;
 
+            SocketAggregateException exception = null;
+
             try
             {
-                Instance.Close();
-            }
-            catch (Exception ex)
-            {
-                OnServerException?.Invoke(new NetServerEventArgs(this, LocalEndPoint) { Exception = ex });
+                List<Exception> exceptions = new List<Exception>();
+
+                try
+                {
+                    Instance.Close();
+                }
+                catch (Exception ex)
+                {
+                    exceptions.Add(ex);
+                }
+
+                if (!(Connections?.Count > 0)) return;
+
+                string[] keys = Connections.Keys.ToArray();
+
+                foreach (var item in keys)
+                {
+                    try
+                    {
+                        Connections[item]?.Stop();
+                    }
+                    catch (Exception ex)
+                    {
+                        exceptions.Add(ex);
+                    }
+                }
+
+                if (exceptions.Count > 0) exception = new SocketAggregateException($"The tcp server {Key} throw exceptions when stopping.", exceptions.ToArray());
+
+                running = false;
             }
             finally
             {
+                if (exception != null)
+                {
+                    OnServerException?.Invoke(new NetServerEventArgs(this, LocalEndPoint) { Exception = exception });
+                    throw exception;
+                }
+
+                if (stopping) OnStopped?.Invoke(new NetServerEventArgs(this, LocalEndPoint));
+
                 stopping = false;
             }
-
-            running = false;
-            stopping = false;
-
-            OnStopped?.Invoke(new NetServerEventArgs(this, LocalEndPoint));
         }
 
         protected override void OnDisconnectedHandler(NetClientEventArgs<ITcpConnection> args)

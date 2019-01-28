@@ -49,12 +49,58 @@ namespace GodSharp.Socket.TcpServerSample
 
             Console.WriteLine("GodSharp.Socket.TcpServer Started!");
 
-            Console.ReadLine();
+            try
+            {
+                while (true)
+                {
+                    Console.ReadLine();
+                    Check(server);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
 
-            server.Stop();
-            Console.WriteLine("GodSharp.Socket.TcpServer Stopped!");
+            try
+            {
+                server.Stop();
+                Console.WriteLine("GodSharp.Socket.TcpServer Stopped!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
 
             Console.ReadLine();
+        }
+
+        private static void Check(ITcpServer server)
+        {
+            try
+            {
+                foreach (var item in server.Connections)
+                {
+                    int ret = -1;
+                    try
+                    {
+                        ret = item.Value.Send(new byte[0]);
+                    }
+                    catch (Exception ex)
+                    {
+                        ret = -2;
+                        Console.WriteLine(ex.Message);
+                    }
+                    finally
+                    {
+                        Console.WriteLine($"{item.Key}:{ret}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }
