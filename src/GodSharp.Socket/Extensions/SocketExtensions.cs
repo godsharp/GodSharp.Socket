@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace GodSharp.Sockets
@@ -125,6 +126,17 @@ namespace GodSharp.Sockets
             if (encoding == null) encoding = Encoding.UTF8;
             byte[] buffers = encoding.GetBytes(data);
             return socket.BeginSendTo(buffers, 0, buffers.Length, SocketFlags.None, remoteEP, callback, state);
+        }
+
+
+        public static void KeepAlive(this Socket socket, int interval = 5000, int span = 1000)
+        {
+            uint dummy = 0;
+            byte[] options = new byte[Marshal.SizeOf(dummy) * 3];
+            BitConverter.GetBytes((uint)1).CopyTo(options, 0);
+            BitConverter.GetBytes((uint)interval).CopyTo(options, Marshal.SizeOf(dummy));
+            BitConverter.GetBytes((uint)span).CopyTo(options, Marshal.SizeOf(dummy) * 2);
+            socket.IOControl(IOControlCode.KeepAliveValues, options, null);
         }
     }
 }

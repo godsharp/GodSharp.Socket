@@ -31,6 +31,7 @@ namespace GodSharp.Sockets.Abstractions
 
             try
             {
+                Connection.Instance.KeepAlive(1000,500);
                 BeginReceive();
                 Running = true;
             }

@@ -127,4 +127,22 @@ namespace GodSharp.Sockets
             if (connection != null) Connection = connection;
         }
     }
+
+    /// <summary>
+    /// TryConnectingEventArgs
+    /// </summary>
+    /// <seealso cref="GodSharp.Sockets.NetClientEventArgs" />
+    public class TryConnectingEventArgs<TConnection> : NetClientEventArgs<TConnection> where TConnection : INetConnection
+    {
+        public int Counter { get; internal set; }
+
+        public TryConnectingEventArgs(TConnection connection, int counter) : this(connection, counter, null, null)
+        {
+        }
+
+        public TryConnectingEventArgs(TConnection connection, int counter, IPEndPoint remote = null, IPEndPoint local = null) : base(connection, remote, local)
+        {
+            Counter = counter;
+        }
+    }
 }

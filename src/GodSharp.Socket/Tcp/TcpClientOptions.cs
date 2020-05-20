@@ -1,4 +1,5 @@
 ﻿using GodSharp.Sockets.Abstractions;
+using GodSharp.Sockets.Tcp;
 using System.Net;
 
 namespace GodSharp.Sockets
@@ -8,12 +9,16 @@ namespace GodSharp.Sockets
         public int ConnectTimeout { get; set; } = -1;
         
         public IPEndPoint RemoteEndPoint { get; set; }
+        public bool ReconnectEnable { get; set; } = true;
 
         public SocketEventHandler<NetClientEventArgs<ITcpConnection>> OnConnected { get; set; }
 
         public SocketEventHandler<NetClientEventArgs<ITcpConnection>> OnStarted { get; set; }
 
         public SocketEventHandler<NetClientEventArgs<ITcpConnection>> OnStopped { get; set; }
+
+        public SocketEventHandler<TryConnectingEventArgs<ITcpConnection>> OnTryConnecting { get; set; }
+        public ITryConnectionStrategy TryConnectionStrategy { get; set; } = new DefaultTryConnectionStrategy();
 
         public TcpClientOptions()
         {
