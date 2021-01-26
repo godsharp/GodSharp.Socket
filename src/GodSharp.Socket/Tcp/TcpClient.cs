@@ -52,6 +52,8 @@ namespace GodSharp.Sockets
 
             connection = new TcpConnection(options.RemoteEndPoint, options.LocalEndPoint) { OnConnected = OnConnectedHandler, OnReceived = OnReceivedHandler, OnDisconnected = OnDisconnectedHandler, OnStarted = OnStartedHandler, OnStopped = OnStoppedHandler, OnException = OnExceptionHandler, ConnectTimeout = options.ConnectTimeout, OnTryConnecting = OnTryConnectingHandler, ReconnectEnable = options.ReconnectEnable, TryConnectionStrategy = options.TryConnectionStrategy };
 
+            connection.KeepAlive(KeepAliveOption.KeepAlive, KeepAliveOption.Interval, KeepAliveOption.Span);
+
             if (options.Id > 0) connection.Id = options.Id;
             if (!options.Name.IsNullOrWhiteSpace()) connection.Name = options.Name;
 
@@ -86,7 +88,13 @@ namespace GodSharp.Sockets
             ThreadPool.QueueUserWorkItem((o) => { connection.Reconnect(); });
             
         }
-        
+
+        public override void UseKeepAlive(bool keepAlive = true, int interval = 5000, int span = 1000)
+        {
+            base.UseKeepAlive(keepAlive, interval, span);
+            connection.KeepAlive(KeepAliveOption.KeepAlive, KeepAliveOption.Interval, KeepAliveOption.Span);
+        }
+
         protected void OnTryConnectingHandler(TryConnectingEventArgs<ITcpConnection> args) => OnTryConnecting?.Invoke(args);
 
         public override void Dispose() => this.Connection?.Dispose();

@@ -6,6 +6,8 @@ namespace GodSharp.Sockets.Abstractions
         where TConnection : INetConnection
         where TEventArgs : NetEventArgs
     {
+        protected KeepAliveOptions KeepAliveOption { get; set; } = new KeepAliveOptions();
+
         public virtual SocketEventHandler<NetClientEventArgs<TConnection>> OnConnected { get; set; }
         public SocketEventHandler<NetClientReceivedEventArgs<TConnection>> OnReceived { get; set; }
         public SocketEventHandler<NetClientEventArgs<TConnection>> OnDisconnected { get; set; }
@@ -41,5 +43,10 @@ namespace GodSharp.Sockets.Abstractions
         protected virtual void OnExceptionHandler(NetClientEventArgs<TConnection> args) => OnException?.Invoke(args);
 
         public abstract void Dispose();
+
+        public virtual void UseKeepAlive(bool keepAlive = true, int interval = 5000, int span = 1000)
+        {
+            KeepAliveOption = new KeepAliveOptions(keepAlive, interval, span);
+        }
     }
 }

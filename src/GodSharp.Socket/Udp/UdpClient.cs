@@ -46,7 +46,7 @@ namespace GodSharp.Sockets
             if (options.RemoteEndPoint == null && options.LocalEndPoint == null) throw new ArgumentNullException(nameof(options.RemoteEndPoint));
 
             connection = new UdpConnection(options.RemoteEndPoint, options.LocalEndPoint, options.Family) { OnReceived = OnReceivedHandler, OnDisconnected = OnDisconnectedHandler, OnStarted = OnStartedHandler, OnStopped = OnStoppedHandler, OnException = OnExceptionHandler};
-
+            connection.KeepAlive(KeepAliveOption.KeepAlive, KeepAliveOption.Interval, KeepAliveOption.Span);
             if (options.Id > 0) connection.Id = options.Id;
             if (!options.Name.IsNullOrWhiteSpace()) connection.Name = options.Name;
 
@@ -62,6 +62,12 @@ namespace GodSharp.Sockets
         public override void Stop() => Connection?.Stop();
 
         protected override void OnConnectedHandler(NetClientEventArgs<IUdpConnection> args) => throw new NotSupportedException();
+
+        public override void UseKeepAlive(bool keepAlive = true, int interval = 5000, int span = 1000)
+        {
+            base.UseKeepAlive(keepAlive, interval, span);
+            connection.KeepAlive(KeepAliveOption.KeepAlive, KeepAliveOption.Interval, KeepAliveOption.Span);
+        }
 
         public override void Dispose() => this.Connection?.Dispose();
     }

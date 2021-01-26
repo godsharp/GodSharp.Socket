@@ -6,6 +6,7 @@ namespace GodSharp.Sockets.Abstractions
     public abstract class NetListener<TConnection> : INetListener<TConnection>, IDisposable where TConnection : INetConnection
     {
         public virtual TConnection Connection { get; internal set; }
+        private KeepAliveOptions KeepAliveOption { get; set; }
 
         private bool running = false;
         public virtual bool Running
@@ -31,9 +32,10 @@ namespace GodSharp.Sockets.Abstractions
 
             try
             {
-                Connection.Instance.KeepAlive(1000,500);
-                BeginReceive();
+                if (KeepAliveOption != null && KeepAliveOption.KeepAlive) Connection.Instance.KeepAliveOne(KeepAliveOption.KeepAlive, KeepAliveOption.Interval, KeepAliveOption.Span);
+
                 Running = true;
+                BeginReceive();
             }
             catch (Exception ex)
             {
@@ -105,6 +107,11 @@ namespace GodSharp.Sockets.Abstractions
             {
                 if (error) Stop();
             }
+        }
+
+        internal protected virtual void KeepAlive(bool keepAlive = true, int interval = 5000, int span = 1000)
+        {
+            KeepAliveOption = new KeepAliveOptions(keepAlive, interval, span);
         }
 
         protected abstract T OnEndReceive<T>(IAsyncResult result) where T : ReceiveResult, new();

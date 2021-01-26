@@ -1,4 +1,6 @@
 ﻿using GodSharp.Sockets;
+using GodSharp.Sockets.Tcp;
+
 using System;
 using System.Linq;
 using System.Net;
@@ -10,7 +12,7 @@ namespace GodSharp.Socket.TcpClientSample
         static void Main(string[] args)
         {
             Console.WriteLine("GodSharp.TcpClient!");
-            TcpClient client = new TcpClient(new TcpClientOptions(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 6001)) { ConnectTimeout=-1, ReconnectEnable = true
+            TcpClient client = new TcpClient(new TcpClientOptions(new IPEndPoint(IPAddress.Parse("10.0.0.10"), 10500)) { ConnectTimeout=2000, ReconnectEnable = true
             })
             {
                 OnConnected = (c) =>
@@ -45,6 +47,12 @@ namespace GodSharp.Socket.TcpClientSample
                     Console.WriteLine($"try connect {c.Counter} ...");
                 }
             };
+
+            // set keep alive
+            client.UseKeepAlive(true, 500, 500);
+
+            // tr connnect stratagy
+            // client.UseTryConnectionStrategy(new DefaultTryConnectionStrategy());
 
             try
             {

@@ -76,6 +76,8 @@ namespace GodSharp.Sockets
 
                 Instance.Bind(options.LocalEndPoint);
 
+                Instance.KeepAliveOne(true, 5000, 1000);
+
                 Instance.Listen(options.Backlog);
 
                 this.Key = options.LocalEndPoint.ToString();
@@ -185,7 +187,7 @@ namespace GodSharp.Sockets
         private void AcceptCallback(IAsyncResult result)
         {
             bool accept = false;
-            ITcpConnection connection = null;
+            TcpConnection connection = null;
 
             try
             {
@@ -199,6 +201,7 @@ namespace GodSharp.Sockets
                 accept = true;
 
                 connection = new TcpConnection(socket) { OnConnected = OnConnectedHandler, OnReceived = OnReceivedHandler, OnDisconnected = OnDisconnectedHandler, OnException = OnExceptionHandler };
+                connection.KeepAlive(KeepAliveOption.KeepAlive, KeepAliveOption.Interval, KeepAliveOption.Span);
                 connection.Start();
 
                 RemoveListener(connection.Key);
@@ -251,6 +254,12 @@ namespace GodSharp.Sockets
                     }
                 }
             }
+        }
+
+        public override void UseKeepAlive(bool keepAlive = true, int interval = 5000, int span = 1000)
+        {
+            base.UseKeepAlive(keepAlive, interval, span);
+            Instance.KeepAlive(KeepAliveOption.KeepAlive, KeepAliveOption.Interval, KeepAliveOption.Span);
         }
 
         public override void Dispose()

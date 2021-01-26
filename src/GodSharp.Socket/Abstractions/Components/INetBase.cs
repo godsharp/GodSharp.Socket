@@ -15,5 +15,7 @@ namespace GodSharp.Sockets.Abstractions
         void Start();
 
         void Stop();
+
+        void UseKeepAlive(bool keepAlive = true, int interval = 5000, int span = 1000);
     }
 }

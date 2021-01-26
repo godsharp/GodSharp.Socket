@@ -15,5 +15,7 @@ namespace GodSharp.Sockets.Abstractions
         void BeginReceive();
 
         void ReceivedCallback(IAsyncResult result);
+
+        //void KeepAlive(bool keepAlive = true, int interval = 5000, int span = 1000);
     }
 }

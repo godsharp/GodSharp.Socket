@@ -57,5 +57,9 @@ namespace GodSharp.Sockets
         /// Stops this instance.
         /// </summary>
         void Stop();
+
+
+        //KeepAliveOptions KeepAliveOption { get; }
+        //void KeepAlive(bool keepAlive = true, int interval = 5000, int span = 1000);
     }
 }

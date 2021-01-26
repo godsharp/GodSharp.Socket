@@ -44,7 +44,9 @@ namespace GodSharp.Socket.TcpServerSample
                     Console.WriteLine($"{c.LocalEndPoint} exception:{c.Exception.StackTrace.ToString()}.");
                 }
             };
-            
+            // set keep alive
+            server.UseKeepAlive(true, 500, 500);
+
             server.Start();
 
             Console.WriteLine("GodSharp.Socket.TcpServer Started!");

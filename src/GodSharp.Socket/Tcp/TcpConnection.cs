@@ -37,7 +37,7 @@ namespace GodSharp.Sockets.Tcp
 
             this.Key = RemoteEndPoint.ToString();
             this.Name = this.Name ?? this.Key;
-
+            
             connected = true;
         }
 
@@ -180,7 +180,6 @@ namespace GodSharp.Sockets.Tcp
         private bool Connect(int millisecondsTimeout = -1)
         {
             ConnectionData data = new ConnectionData();
-
             Instance.BeginConnect(this.RemoteEndPoint.As(), ConnectCallback, data);
 
             bool ret = data.WaitConnected(millisecondsTimeout);

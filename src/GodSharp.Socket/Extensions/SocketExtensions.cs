@@ -49,7 +49,7 @@ namespace GodSharp.Sockets
         public static int Send(this Socket socket, string data, SocketFlags socketFlags, Encoding encoding = null)
         {
             if (encoding == null) encoding = Encoding.UTF8;
-            
+
             return socket.Send(encoding.GetBytes(data), socketFlags);
         }
 
@@ -128,15 +128,44 @@ namespace GodSharp.Sockets
             return socket.BeginSendTo(buffers, 0, buffers.Length, SocketFlags.None, remoteEP, callback, state);
         }
 
+        /// <summary>
+        /// Set socket keep alive by IO control and socket option.
+        /// </summary>
+        /// <param name="socket">The socket instance.</param>
+        /// <param name="keepAlive">The value whether keep alive.</param>
+        /// <param name="interval">The interval for check connection,unit is ms.</param>
+        /// <param name="span">The span for retry check connection,unit is ms.</param>
+        public static void KeepAliveOne(this Socket socket, bool keepAlive = true, int interval = 5000, int span = 1000)
+        {
+            socket.KeepAlive(keepAlive, interval, span);
+            socket.KeepAlive(keepAlive);
+        }
 
-        public static void KeepAlive(this Socket socket, int interval = 5000, int span = 1000)
+        /// <summary>
+        /// Set socket keep alive by IO control.
+        /// </summary>
+        /// <param name="socket">The socket instance.</param>
+        /// <param name="keepAlive">The value whether keep alive.</param>
+        /// <param name="interval">The interval for check connection,unit is ms.</param>
+        /// <param name="span">The span for retry check connection,unit is ms.</param>
+        public static void KeepAlive(this Socket socket, bool keepAlive = true, int interval = 5000, int span = 1000)
         {
             uint dummy = 0;
             byte[] options = new byte[Marshal.SizeOf(dummy) * 3];
-            BitConverter.GetBytes((uint)1).CopyTo(options, 0);
+            BitConverter.GetBytes((uint)(keepAlive ? 1 : 0)).CopyTo(options, 0);
             BitConverter.GetBytes((uint)interval).CopyTo(options, Marshal.SizeOf(dummy));
             BitConverter.GetBytes((uint)span).CopyTo(options, Marshal.SizeOf(dummy) * 2);
             socket.IOControl(IOControlCode.KeepAliveValues, options, null);
+        }
+
+        /// <summary>
+        /// Set socket keep alive by socket option.
+        /// </summary>
+        /// <param name="socket">The socket instance.</param>
+        /// <param name="keepAlive">The value whether keep alive.</param>
+        public static void KeepAlive(this Socket socket, bool keepAlive = true)
+        {
+            socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, keepAlive);
         }
     }
 }

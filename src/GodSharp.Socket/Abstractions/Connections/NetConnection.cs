@@ -8,6 +8,8 @@ namespace GodSharp.Sockets.Abstractions
         where TConnection : INetConnection
         where TEventArgs : NetEventArgs
     {
+        internal protected KeepAliveOptions KeepAliveOption { get; set; }
+
         public virtual int Id { get; internal set; }
 
         public virtual string Name { get; internal set; }
@@ -37,5 +39,10 @@ namespace GodSharp.Sockets.Abstractions
         public abstract void Stop();
 
         public abstract void Dispose();
+
+        internal protected virtual void KeepAlive(bool keepAlive = true, int interval = 5000, int span = 1000)
+        {
+            KeepAliveOption = new KeepAliveOptions(keepAlive, interval, span);
+        }
     }
 }

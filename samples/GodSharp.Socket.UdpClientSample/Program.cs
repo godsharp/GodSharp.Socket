@@ -9,7 +9,7 @@ namespace GodSharp.Socket.UdpClientSample
         static void Main(string[] args)
         {
             Console.WriteLine("GodSharp.UdpClient!");
-            IUdpClient client = new UdpClient("127.0.0.1",4001)
+            IUdpClient client = new UdpClient("10.0.0.10",10500)
             {
                 OnReceived = (c) =>
                 {
@@ -36,6 +36,8 @@ namespace GodSharp.Socket.UdpClientSample
                 }
             };
 
+            client.UseKeepAlive(true, 500, 500);
+            
             client.Start();
             Console.WriteLine("Started");
 
