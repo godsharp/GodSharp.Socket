@@ -41,22 +41,25 @@ namespace GodSharp.Sockets.Tcp
             connected = true;
         }
 
-        internal TcpConnection(IPEndPoint remote, IPEndPoint local) => OnConstructing(remote, local);
-
-        private void OnConstructing(IPEndPoint remote, IPEndPoint local)
+        internal TcpConnection(IPEndPoint remote, IPEndPoint local)
         {
             _remote = remote;
             _local = local;
+            OnConstructing();
+        }
+
+        private void OnConstructing()
+        {
             created = true;
             try
             {
-                if (remote == null) throw new ArgumentNullException(nameof(remote));
+                if (_remote == null) throw new ArgumentNullException(nameof(_remote));
 
-                AddressFamily family = remote.AddressFamily;
+                AddressFamily family = _remote.AddressFamily;
 
-                if (remote.Port.NotIn(IPEndPoint.MinPort, IPEndPoint.MaxPort)) throw new ArgumentOutOfRangeException(nameof(remote.Port), $"The {nameof(remote.Port)} must between {IPEndPoint.MinPort} to {IPEndPoint.MaxPort}.");
+                if (_remote.Port.NotIn(IPEndPoint.MinPort, IPEndPoint.MaxPort)) throw new ArgumentOutOfRangeException(nameof(_remote.Port), $"The {nameof(_remote.Port)} must between {IPEndPoint.MinPort} to {IPEndPoint.MaxPort}.");
 
-                if (remote.Port < 1) throw new ArgumentOutOfRangeException(nameof(remote.Port));
+                if (_remote.Port < 1) throw new ArgumentOutOfRangeException(nameof(_remote.Port));
 
                 switch (family)
                 {
@@ -67,18 +70,17 @@ namespace GodSharp.Sockets.Tcp
                         throw new ArgumentOutOfRangeException(nameof(family), $"The AddressFamily only support AddressFamily.InterNetwork and AddressFamily.InterNetworkV6.");
                 }
 
-                if (local != null && local.AddressFamily != family) throw new ArgumentException($"The {nameof(local)} and {nameof(family)} not match.");
+                if (_local != null && _local.AddressFamily != family) throw new ArgumentException($"The {nameof(_local)} and {nameof(family)} not match.");
 
-                Instance = null;
                 Instance = new Socket(family, SocketType.Stream, ProtocolType.Tcp);
-                if (local != null && local.Port > 0)
+                if (_local != null && _local.Port > 0)
                 {
-                    //Instance.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-                    Instance.Bind(local);
+                    Instance.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                    Instance.Bind(_local);
                 }
 
-                this.RemoteEndPoint = remote;
-                if (local?.Port > 0) this.LocalEndPoint = local;
+                this.RemoteEndPoint = _remote;
+                if (_local?.Port > 0) this.LocalEndPoint = _local;
 
                 this.Key = RemoteEndPoint.ToString();
                 this.Name = this.Name ?? this.Key;
@@ -102,9 +104,9 @@ namespace GodSharp.Sockets.Tcp
                 do
                 {
                     tryConnectCounter++;
-                    Console.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}]try connect to {_remote.As()} {tryConnectCounter} ...");
+                    Console.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}]try {_local.As()} connect to {_remote.As()} {tryConnectCounter} ...");
                     OnTryConnecting?.Invoke(new TryConnectingEventArgs<ITcpConnection>(this, tryConnectCounter));
-                    OnConstructing(_remote, _local);
+                    OnConstructing();
                     ret = ConnectInternal();
 
                     if (!ret)
