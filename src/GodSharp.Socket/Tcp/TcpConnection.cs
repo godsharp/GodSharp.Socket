@@ -153,7 +153,7 @@ namespace GodSharp.Sockets.Tcp
             {
                 OnException?.Invoke(new NetClientEventArgs<ITcpConnection>(this) { Exception = ex });
 
-                if (!connected && !created) throw ex;
+                if (!connected && !created && !connecting) throw ex;
                 //if (!started && !connected && ReconnectEnable && created) Reconnect();
             }
 
