@@ -12,9 +12,10 @@ namespace GodSharp.Socket.TcpClientSample
         static void Main(string[] args)
         {
             Console.WriteLine("GodSharp.TcpClient!");
-            TcpClient client = new TcpClient(new TcpClientOptions(new IPEndPoint(IPAddress.Parse("10.0.0.10"), 10500)) { ConnectTimeout=2000, ReconnectEnable = true
-            })
+            TcpClient client = new TcpClient("127.0.0.1", 10500,10002)
             {
+                //ConnectTimeout = 2000,
+                //ReconnectEnable = true,
                 OnConnected = (c) =>
                 {
                     Console.WriteLine($"{c.RemoteEndPoint} connected.");

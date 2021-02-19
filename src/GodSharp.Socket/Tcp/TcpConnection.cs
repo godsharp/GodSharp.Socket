@@ -69,8 +69,13 @@ namespace GodSharp.Sockets.Tcp
 
                 if (local != null && local.AddressFamily != family) throw new ArgumentException($"The {nameof(local)} and {nameof(family)} not match.");
 
+                Instance = null;
                 Instance = new Socket(family, SocketType.Stream, ProtocolType.Tcp);
-                if (local != null && local.Port > 0) Instance.Bind(local);
+                if (local != null && local.Port > 0)
+                {
+                    //Instance.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                    Instance.Bind(local);
+                }
 
                 this.RemoteEndPoint = remote;
                 if (local?.Port > 0) this.LocalEndPoint = local;
@@ -80,7 +85,8 @@ namespace GodSharp.Sockets.Tcp
             }
             catch (Exception ex)
             {
-                throw ex;
+                OnException?.Invoke(new NetClientEventArgs<ITcpConnection>(this) { Exception = ex });
+                if (!ReconnectEnable) throw ex;
             }
         }
 
@@ -153,8 +159,8 @@ namespace GodSharp.Sockets.Tcp
             {
                 OnException?.Invoke(new NetClientEventArgs<ITcpConnection>(this) { Exception = ex });
 
-                if (!connected && !created && !connecting) throw ex;
-                //if (!started && !connected && ReconnectEnable && created) Reconnect();
+                //if (!connected && !created && !connecting) throw ex;
+                if (created && !ReconnectEnable) throw ex;
             }
 
             return false;
@@ -193,7 +199,6 @@ namespace GodSharp.Sockets.Tcp
             if (data.Connected == false && data.Exception != null)
             {
                 OnException?.Invoke(new NetClientEventArgs<ITcpConnection>(this) { Exception = data.Exception });
-                //throw data.Exception;
                 if (created) throw data.Exception;
 
                 return false;
