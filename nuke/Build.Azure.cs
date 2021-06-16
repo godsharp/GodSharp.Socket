@@ -6,7 +6,8 @@
     AutoGenerate = true,
     TriggerBranchesInclude = new[] {"master","dev","release"},
     InvokedTargets = new[] {nameof(Push)},
-    ImportSecrets = new[] {nameof(NuGetApiKey), nameof(MyGetApiKey)}
+    ImportSecrets = new[] {nameof(NuGetApiKey), nameof(MyGetApiKey)},
+    CacheKeyFiles = null
 )]
 partial class Build
 {
