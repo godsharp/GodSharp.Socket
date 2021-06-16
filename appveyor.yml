@@ -9,8 +9,6 @@ image: Visual Studio 2019
 configuration: Release
 platform: Any CPU
 clone_folder: c:\projects\GodSharp.Socket
-install:
-- cmd: nuget restore
 build:
   project: GodSharp.Socket.sln
   publish_nuget: false
