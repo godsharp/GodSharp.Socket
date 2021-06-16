@@ -32,11 +32,6 @@ stages:
         displayName: 'Push'
         dependsOn: [  ]
         steps:
-          - task: Cache@2
-            inputs:
-              key: $(Agent.OS) | NuGetApiKey, MyGetApiKey
-              restoreKeys: $(Agent.OS)
-              path: ~/.nuget/packages
           - task: CmdLine@2
             inputs:
               script: './build.cmd Initial Clean Restore Compile Copy Artifacts Push --skip'

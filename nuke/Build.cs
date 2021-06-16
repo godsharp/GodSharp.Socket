@@ -39,7 +39,7 @@ partial class Build : NukeBuild
     [Parameter("NuGet Api Key")]
     [Secret]
     string NuGetApiKey;
-
+    
     [Solution] readonly Solution Solution;
 
     [CI] readonly AzurePipelines AzurePipelines;
