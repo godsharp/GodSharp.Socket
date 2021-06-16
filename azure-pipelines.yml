@@ -28,8 +28,8 @@ stages:
     pool:
       vmImage: 'windows-latest'
     jobs:
-      - job: Initial
-        displayName: 'Initial'
+      - job: Push
+        displayName: 'Push'
         dependsOn: [  ]
         steps:
           - task: Cache@2
@@ -39,97 +39,7 @@ stages:
               path: ~/.nuget/packages
           - task: CmdLine@2
             inputs:
-              script: './build.cmd Initial --skip'
-            env:
-              NuGetApiKey: $(NuGetApiKey)
-              MyGetApiKey: $(MyGetApiKey)
-      - job: Clean
-        displayName: 'Clean'
-        dependsOn: [ Initial ]
-        steps:
-          - task: Cache@2
-            inputs:
-              key: $(Agent.OS) | NuGetApiKey, MyGetApiKey
-              restoreKeys: $(Agent.OS)
-              path: ~/.nuget/packages
-          - task: CmdLine@2
-            inputs:
-              script: './build.cmd Clean --skip'
-            env:
-              NuGetApiKey: $(NuGetApiKey)
-              MyGetApiKey: $(MyGetApiKey)
-      - job: Restore
-        displayName: 'Restore'
-        dependsOn: [ Clean ]
-        steps:
-          - task: Cache@2
-            inputs:
-              key: $(Agent.OS) | NuGetApiKey, MyGetApiKey
-              restoreKeys: $(Agent.OS)
-              path: ~/.nuget/packages
-          - task: CmdLine@2
-            inputs:
-              script: './build.cmd Restore --skip'
-            env:
-              NuGetApiKey: $(NuGetApiKey)
-              MyGetApiKey: $(MyGetApiKey)
-      - job: Compile
-        displayName: 'Compile'
-        dependsOn: [ Restore ]
-        steps:
-          - task: Cache@2
-            inputs:
-              key: $(Agent.OS) | NuGetApiKey, MyGetApiKey
-              restoreKeys: $(Agent.OS)
-              path: ~/.nuget/packages
-          - task: CmdLine@2
-            inputs:
-              script: './build.cmd Compile --skip'
-            env:
-              NuGetApiKey: $(NuGetApiKey)
-              MyGetApiKey: $(MyGetApiKey)
-      - job: Copy
-        displayName: 'Copy'
-        dependsOn: [ Compile ]
-        steps:
-          - task: Cache@2
-            inputs:
-              key: $(Agent.OS) | NuGetApiKey, MyGetApiKey
-              restoreKeys: $(Agent.OS)
-              path: ~/.nuget/packages
-          - task: CmdLine@2
-            inputs:
-              script: './build.cmd Copy --skip'
-            env:
-              NuGetApiKey: $(NuGetApiKey)
-              MyGetApiKey: $(MyGetApiKey)
-      - job: Artifacts
-        displayName: 'Artifacts'
-        dependsOn: [ Copy ]
-        steps:
-          - task: Cache@2
-            inputs:
-              key: $(Agent.OS) | NuGetApiKey, MyGetApiKey
-              restoreKeys: $(Agent.OS)
-              path: ~/.nuget/packages
-          - task: CmdLine@2
-            inputs:
-              script: './build.cmd Artifacts --skip'
-            env:
-              NuGetApiKey: $(NuGetApiKey)
-              MyGetApiKey: $(MyGetApiKey)
-      - job: Push
-        displayName: 'Push'
-        dependsOn: [ Artifacts ]
-        steps:
-          - task: Cache@2
-            inputs:
-              key: $(Agent.OS) | NuGetApiKey, MyGetApiKey
-              restoreKeys: $(Agent.OS)
-              path: ~/.nuget/packages
-          - task: CmdLine@2
-            inputs:
-              script: './build.cmd Push --skip'
+              script: './build.cmd Initial Clean Restore Compile Copy Artifacts Push --skip'
             env:
               NuGetApiKey: $(NuGetApiKey)
               MyGetApiKey: $(MyGetApiKey)
