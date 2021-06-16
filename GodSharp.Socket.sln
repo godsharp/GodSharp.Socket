@@ -28,24 +28,25 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GodSharp.Socket.TcpServerSa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GodSharp.Socket.UdpClientSample", "samples\GodSharp.Socket.UdpClientSample\GodSharp.Socket.UdpClientSample.csproj", "{1138BDDF-3C2B-40A6-A76E-A93ECC046AF5}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NukeBuild", "nuke\NukeBuild.csproj", "{6887AA44-C020-4BD3-BBA5-A0599BFE0DF3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6887AA44-C020-4BD3-BBA5-A0599BFE0DF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6887AA44-C020-4BD3-BBA5-A0599BFE0DF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06BBFBF4-9958-42CB-9920-3CF516773368}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{06BBFBF4-9958-42CB-9920-3CF516773368}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06BBFBF4-9958-42CB-9920-3CF516773368}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06BBFBF4-9958-42CB-9920-3CF516773368}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3F358017-1FF1-48AC-BA29-DF4E72E25A77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3F358017-1FF1-48AC-BA29-DF4E72E25A77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F358017-1FF1-48AC-BA29-DF4E72E25A77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3730B10A-FF1F-452F-AA6C-24CD83563BCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3730B10A-FF1F-452F-AA6C-24CD83563BCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3730B10A-FF1F-452F-AA6C-24CD83563BCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1138BDDF-3C2B-40A6-A76E-A93ECC046AF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1138BDDF-3C2B-40A6-A76E-A93ECC046AF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1138BDDF-3C2B-40A6-A76E-A93ECC046AF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
