@@ -4,7 +4,7 @@
     null,
     AzurePipelinesImage.WindowsLatest,
     AutoGenerate = true,
-    TriggerBranchesInclude = new[] {"main"},
+    TriggerBranchesInclude = new[] {"master","dev","release"},
     InvokedTargets = new[] {nameof(Push)},
     ImportSecrets = new[] {nameof(NuGetApiKey), nameof(MyGetApiKey)}
 )]

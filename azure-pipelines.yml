@@ -17,7 +17,9 @@
 trigger:
   branches:
     include:
-      - main
+      - master
+      - dev
+      - release
 
 stages:
   - stage: windows_latest
