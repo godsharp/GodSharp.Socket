@@ -17,6 +17,7 @@ namespace GodSharp.Sockets.Tcp
         public ITcpListener Listener { get; internal set; }
 
         public int ConnectTimeout { get; internal set; } = 3000;
+        public bool Connected => connected;
 
         public bool ReconnectEnable { get; set; } = true;
         private int tryConnectCounter = 0;

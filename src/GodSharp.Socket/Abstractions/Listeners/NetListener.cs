@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
+using System.Net.Sockets;
 
 namespace GodSharp.Sockets.Abstractions
 {
@@ -48,18 +50,26 @@ namespace GodSharp.Sockets.Abstractions
             if (!Running) return;
 
             Running = false;
-            Exception exception = null;
+            var exceptions = new List<Exception>();
             try
             {
-                Connection?.Instance.Disconnect(false);
                 Connection?.Instance.Close();
             }
             catch (Exception ex)
             {
-                exception = ex;
+                exceptions.Add(ex);
+            }
+            
+            try
+            {
+                Connection?.Instance.Close();
+            }
+            catch (Exception ex)
+            {
+                exceptions.Add(ex);
             }
 
-            OnStop(exception);
+            OnStop(exceptions.Count == 0 ? null : new SocketAggregateException("Stop throw exception", exceptions.ToArray()));
         }
 
         protected abstract void OnStop(Exception exception);

@@ -10,7 +10,7 @@ namespace GodSharp.Socket.TcpServerSample
         {
             Console.WriteLine("Hello GodSharp.Socket.TcpServerSample!");
 
-            ITcpServer server = new TcpServer()
+            ITcpServer server = new TcpServer(40015)
             {
                 OnConnected = (c) =>
                 {
@@ -21,7 +21,8 @@ namespace GodSharp.Socket.TcpServerSample
                     Console.WriteLine($"Received from {c.RemoteEndPoint}:");
                     Console.WriteLine(string.Join(" ", c.Buffers.Select(x => x.ToString("X2")).ToArray()));
 
-                    c.NetConnection.Send(c.Buffers);
+                    //c.NetConnection.Send(c.Buffers);
+                    c.NetConnection.Send(new byte[] { 0x00, 0x00, 0x0B, 0x30, 0x30, 0x30, 0x30, 0x30, 0x41, 0x43, 0x4B });
                 },
                 OnDisconnected = (c) =>
                 {

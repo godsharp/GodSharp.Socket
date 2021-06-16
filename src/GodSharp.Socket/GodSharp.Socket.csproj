@@ -15,10 +15,13 @@
     <NeutralLanguage>en-US</NeutralLanguage>
     <Description>A easy to used socket server and client for .NET.</Description>
     <OutputPath>$(SolutionDir)\output\$(AssemblyName)</OutputPath>
-    <DocumentationFile>$(SolutionDir)\output\$(AssemblyName)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+<!--    <DocumentationFile>$(SolutionDir)\output\$(AssemblyName)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>-->
     <!--<TargetFramework>netstandard2.0</TargetFramework>-->
-    <TargetFrameworks Condition="'$(LibraryFrameworks)'==''">net35;net40;net45;net46;net47;netstandard2.0;net50;</TargetFrameworks>
-    <TargetFrameworks Condition="'$(LibraryFrameworks)'!=''">$(LibraryFrameworks)</TargetFrameworks>
+    <TargetFrameworks>net35;net40;net45;net46;net47;netstandard2.0;net50;</TargetFrameworks>
+<!--    <TargetFrameworks Condition="'$(LibraryFrameworks)'==''">net35;net40;net45;net46;net47;netstandard2.0;net50;</TargetFrameworks>-->
+<!--    <TargetFrameworks Condition="'$(LibraryFrameworks)'!=''">$(LibraryFrameworks)</TargetFrameworks>-->
+    <FrameworkPathOverride Condition="'$(TargetFramework)' == 'net35'">$(MSBuildProgramFiles32)\Reference Assemblies\Microsoft\Framework\.NETFramework\v3.5\Profile\Client</FrameworkPathOverride>
+    <AutomaticallyUseReferenceAssemblyPackages Condition=" '$(TargetFramework)' == 'net35' ">false</AutomaticallyUseReferenceAssemblyPackages>
   </PropertyGroup>  
   
   <PropertyGroup Condition="'$(TargetFramework)'=='net35'">

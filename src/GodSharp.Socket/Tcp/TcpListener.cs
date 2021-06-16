@@ -23,6 +23,28 @@ namespace GodSharp.Sockets.Tcp
 
         public override void Dispose()
         {
+            if (Running && Connection?.Instance.Connected == true)
+            {
+                try
+                {
+                    Connection?.Instance?.Shutdown(SocketShutdown.Both);
+                }
+                catch (Exception e)
+                {
+                    OnException(e);
+                }
+
+                try
+                {
+                    Connection?.Instance?.Close();
+                }
+                catch (Exception e)
+                {
+                    OnException(e);
+                }
+
+            }
+
             Connection = null;
         }
     }
