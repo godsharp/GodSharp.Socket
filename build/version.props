@@ -1,7 +1,7 @@
 ﻿<Project>
   <PropertyGroup Condition="'$(AssemblyName)'=='GodSharp.Socket'">
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2021.206.17.0</Version>
-    <FileVersion>2021.206.17.000</FileVersion>
+    <Version>2021.206.17.1</Version>
+    <FileVersion>2021.206.17.1</FileVersion>
   </PropertyGroup>
 </Project>

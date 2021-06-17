@@ -12,6 +12,11 @@ namespace GodSharp.Sockets
         /// The connect timeout.
         /// </value>
         int ConnectTimeout { get; }
+        
+        /// <summary>
+        /// socket is connected
+        /// </summary>
+        bool Connected { get; }
 
         /// <summary>
         /// Gets the listener.

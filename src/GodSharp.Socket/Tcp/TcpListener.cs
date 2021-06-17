@@ -42,9 +42,15 @@ namespace GodSharp.Sockets.Tcp
                 {
                     OnException(e);
                 }
-
             }
-
+            try
+            {
+                Connection?.Dispose();
+            }
+            catch (Exception e)
+            {
+                OnException(e);
+            }
             Connection = null;
         }
     }

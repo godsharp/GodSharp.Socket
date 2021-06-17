@@ -10,12 +10,11 @@ namespace GodSharp.Sockets
 {
     public sealed class TcpClient : NetBase<ITcpConnection, NetClientEventArgs<ITcpConnection>>, ITcpClient, IDisposable
     {
-        private bool stopping = false;
-
         public override bool Running => Connection?.Listener?.Running == true;
 
         private TcpConnection connection { get; set; }
         public ITcpConnection Connection => connection;
+        public bool Connected => connection?.Connected == true;
 
         public override string Key => Connection.Key;
 
@@ -31,7 +30,7 @@ namespace GodSharp.Sockets
         {
             try
             {
-                TcpClientOptions options = new TcpClientOptions() { Id = id, Name = name };
+                TcpClientOptions options = new TcpClientOptions { Id = id, Name = name };
                 if (connectTimeout > 0) options.ConnectTimeout = connectTimeout;
                 options.TryConnectionStrategy = new DefaultTryConnectionStrategy();
                 options.RemoteEndPoint = new IPEndPoint(IPAddress.Parse(remoteHost), remotePort);
@@ -72,21 +71,21 @@ namespace GodSharp.Sockets
 
         public override void Start()
         {
-            stopping = false;
             Connection?.Start();
         }
 
         public override void Stop()
         {
-            stopping = true;
             Connection?.Stop();
         }
 
         protected override void OnDisconnectedHandler(NetClientEventArgs<ITcpConnection> args)
         {
             base.OnDisconnectedHandler(args);
-            ThreadPool.QueueUserWorkItem((o) => { connection.Reconnect(); });
-            
+            if (connection?.ReconnectEnable==true)
+            {
+                ThreadPool.QueueUserWorkItem((o) => { connection.Reconnect(); });
+            }
         }
 
         public override void UseKeepAlive(bool keepAlive = true, int interval = 5000, int span = 1000)

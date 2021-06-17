@@ -23,12 +23,14 @@ namespace GodSharp.Sockets.Tcp
         private int tryConnectCounter = 0;
         private bool started = false;
         private bool connecting = false;
+        private bool stopping = false;
 
         internal SocketEventHandler<TryConnectingEventArgs<ITcpConnection>> OnTryConnecting { get; set; }
         internal ITryConnectionStrategy TryConnectionStrategy { get; set; }
 
         internal TcpConnection(Socket socket)
         {
+            stopping = false;
             created = false;
             if (socket.LocalEndPoint == null && socket.RemoteEndPoint == null) throw new ArgumentException("This socket is not connected.");
 
@@ -44,6 +46,7 @@ namespace GodSharp.Sockets.Tcp
 
         internal TcpConnection(IPEndPoint remote, IPEndPoint local)
         {
+            stopping = false;
             _remote = remote;
             _local = local;
             OnConstructing();
@@ -99,13 +102,14 @@ namespace GodSharp.Sockets.Tcp
             {
                 if (!ReconnectEnable) return;
                 if (!created) return;
+                if (stopping) return;
                 connecting = true;
                 bool ret = false;
 
                 do
                 {
+                    if (stopping) return;
                     tryConnectCounter++;
-                    Console.WriteLine($"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}]try {_local.As()} connect to {_remote.As()} {tryConnectCounter} ...");
                     OnTryConnecting?.Invoke(new TryConnectingEventArgs<ITcpConnection>(this, tryConnectCounter));
                     OnConstructing();
                     ret = ConnectInternal();
@@ -131,6 +135,7 @@ namespace GodSharp.Sockets.Tcp
 
         public override void Start()
         {
+            stopping = false;
             started = ConnectInternal();
             if (!started) ThreadPool.QueueUserWorkItem((o) => { Reconnect(); });
         }
@@ -141,7 +146,7 @@ namespace GodSharp.Sockets.Tcp
             {
                 if (Listener?.Running == true) return true;
 
-                bool ret = connected ? true : Connect(ConnectTimeout);
+                var ret = connected || Connect(ConnectTimeout);
 
                 if (ret)
                 {
@@ -171,13 +176,13 @@ namespace GodSharp.Sockets.Tcp
 
         public override void Stop()
         {
+            stopping = true;
             if (Listener == null) return;
             if (!Listener.Running) return;
 
             try
             {
                 Listener?.Stop();
-
                 OnStopped?.Invoke(new NetClientEventArgs<ITcpConnection>(this));
             }
             catch (Exception ex)
@@ -188,32 +193,31 @@ namespace GodSharp.Sockets.Tcp
 
         private bool Connect(int millisecondsTimeout = -1)
         {
-            ConnectionData data = new ConnectionData();
-            Instance.BeginConnect(this.RemoteEndPoint.As(), ConnectCallback, data);
+            var data = new ConnectionData();
+            Instance.BeginConnect(RemoteEndPoint.As(), ConnectCallback, data);
 
-            bool ret = data.WaitConnected(millisecondsTimeout);
+            var ret = data.WaitConnected(millisecondsTimeout);
 
-            if (!ret) data.Connected = ret;
+            if (!ret) data.Connected = false;
 
             data.WaitCompleted();
 
             if (!ret) throw new SocketException((int)SocketError.TimedOut);
 
-            if (data.Connected == false && data.Exception != null)
-            {
-                OnException?.Invoke(new NetClientEventArgs<ITcpConnection>(this) { Exception = data.Exception });
-                if (created) throw data.Exception;
-
-                return false;
-            }
-
-            return data.Connected == true;
+            if (data.Connected != false || data.Exception == null) return data.Connected == true;
+            OnException?.Invoke(new NetClientEventArgs<ITcpConnection>(this) { Exception = data.Exception });
+            if (created) throw data.Exception;
+            return false;
         }
 
         private void ConnectCallback(IAsyncResult result)
         {
-            ConnectionData data = result.AsyncState as ConnectionData;
-            bool? connected = null;
+            if (!(result.AsyncState is ConnectionData data))
+            {
+                return;
+            }
+            
+            bool? isConnect = null;
 
             data.SetConnected();
 
@@ -221,19 +225,17 @@ namespace GodSharp.Sockets.Tcp
             {
                 Instance.EndConnect(result);
 
-                connected = false;
+                isConnect = false;
 
                 if (data.Connected == false) return;
 
-                Console.WriteLine("tcp.client connected");
-
-                this.RemoteEndPoint = Instance.RemoteEndPoint.As();
-                this.LocalEndPoint = Instance.LocalEndPoint.As();
+                RemoteEndPoint = Instance.RemoteEndPoint.As();
+                LocalEndPoint = Instance.LocalEndPoint.As();
 
                 OnConnected?.Invoke(new NetClientEventArgs<ITcpConnection>(this));
 
                 data.Connected = true;
-                connected = true;
+                isConnect = true;
             }
             catch (Exception ex)
             {
@@ -242,17 +244,26 @@ namespace GodSharp.Sockets.Tcp
             }
             finally
             {
-                Console.WriteLine($"tcp.client ConnectCallback connected:{connected}");
-
-                if (connected == false && data.Connected == false)
+                if (isConnect == false && data.Connected == false)
                 {
                     try
                     {
-                        Instance.Close();
+                        Instance?.Shutdown(SocketShutdown.Both);
                     }
-                    catch (Exception ex)
+                    catch (Exception e)
                     {
-                        data.Exception = data.Exception ?? ex;
+                        data.Exception = data.Exception ?? e;
+                        OnException?.Invoke(new NetClientEventArgs<ITcpConnection>(this) { Exception = data.Exception });
+                    }
+
+                    try
+                    {
+                        Instance?.Close();
+                    }
+                    catch (Exception e)
+                    {
+                        data.Exception = data.Exception ?? e;
+                        OnException?.Invoke(new NetClientEventArgs<ITcpConnection>(this) { Exception = data.Exception });
                     }
                 }
 
