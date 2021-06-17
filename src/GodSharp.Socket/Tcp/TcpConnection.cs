@@ -100,6 +100,7 @@ namespace GodSharp.Sockets.Tcp
         {
             try
             {
+                connected = false;
                 if (!ReconnectEnable) return;
                 if (!created) return;
                 if (stopping) return;
@@ -204,6 +205,7 @@ namespace GodSharp.Sockets.Tcp
         private bool Connect(int millisecondsTimeout = -1)
         {
             var data = new ConnectionData();
+            connected = false;
             Instance.BeginConnect(RemoteEndPoint.As(), ConnectCallback, data);
 
             var ret = data.WaitConnected(millisecondsTimeout);
@@ -237,11 +239,16 @@ namespace GodSharp.Sockets.Tcp
 
                 isConnect = false;
 
-                if (data.Connected == false) return;
+                if (data.Connected == false)
+                {
+                    connected = false;
+                    return;
+                }
 
                 RemoteEndPoint = Instance.RemoteEndPoint.As();
                 LocalEndPoint = Instance.LocalEndPoint.As();
 
+                connected = true;
                 OnConnected?.Invoke(new NetClientEventArgs<ITcpConnection>(this));
 
                 data.Connected = true;
