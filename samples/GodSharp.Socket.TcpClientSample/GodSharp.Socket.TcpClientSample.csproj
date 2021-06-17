@@ -1,12 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net46</TargetFramework>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\GodSharp.Socket\GodSharp.Socket.csproj" />
-  </ItemGroup>
+<!--    <ItemGroup>-->
+<!--        <ProjectReference Include="..\..\src\GodSharp.Socket\GodSharp.Socket.csproj" />-->
+<!--    </ItemGroup>-->
+
+    <ItemGroup>
+      <PackageReference Include="GodSharp.Socket" Version="2021.206.17.1" />
+    </ItemGroup>
 
 </Project>

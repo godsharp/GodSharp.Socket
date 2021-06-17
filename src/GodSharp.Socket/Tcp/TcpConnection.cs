@@ -108,21 +108,31 @@ namespace GodSharp.Sockets.Tcp
 
                 do
                 {
-                    if (stopping) return;
-                    tryConnectCounter++;
-                    OnTryConnecting?.Invoke(new TryConnectingEventArgs<ITcpConnection>(this, tryConnectCounter));
-                    OnConstructing();
-                    ret = ConnectInternal();
-
-                    if (!ret)
+                    try
                     {
-                        try
+                        if (stopping) return;
+                        tryConnectCounter++;
+                        OnTryConnecting?.Invoke(new TryConnectingEventArgs<ITcpConnection>(this, tryConnectCounter));
+                        OnConstructing();
+                        ret = ConnectInternal();
+                    }
+                    catch (Exception ex)
+                    {
+                        OnException?.Invoke(new NetClientEventArgs<ITcpConnection>(this) { Exception = ex });
+                    }
+                    finally
+                    {
+
+                        if (!ret)
                         {
-                            if (TryConnectionStrategy != null) Thread.Sleep(TryConnectionStrategy.Handle(tryConnectCounter));
-                        }
-                        catch (Exception ex)
-                        {
-                            OnException?.Invoke(new NetClientEventArgs<ITcpConnection>(this) { Exception = ex });
+                            try
+                            {
+                                if (TryConnectionStrategy != null) Thread.Sleep(TryConnectionStrategy.Handle(tryConnectCounter));
+                            }
+                            catch (Exception ex)
+                            {
+                                OnException?.Invoke(new NetClientEventArgs<ITcpConnection>(this) { Exception = ex });
+                            }
                         }
                     }
                 } while (!ret);

@@ -17,9 +17,9 @@ namespace GodSharp.Sockets.Tcp
 
         protected override void OnReceiveHandling(byte[] buffers, IPEndPoint remote = null, IPEndPoint local = null) => Connection.OnReceived?.Invoke(new NetClientReceivedEventArgs<ITcpConnection>(Connection, buffers, remote, local));
 
-        protected override void OnStop(Exception exception) => Connection.OnDisconnected?.Invoke(new NetClientEventArgs<ITcpConnection>(Connection) { Exception = exception });
+        protected override void OnStop(Exception exception) => Connection?.OnDisconnected?.Invoke(new NetClientEventArgs<ITcpConnection>(Connection) { Exception = exception });
 
-        protected override void OnException(Exception exception) => Connection.OnException?.Invoke(new NetClientEventArgs<ITcpConnection>(Connection) { Exception = exception });
+        protected override void OnException(Exception exception) => Connection?.OnException?.Invoke(new NetClientEventArgs<ITcpConnection>(Connection) { Exception = exception });
 
         public override void Dispose()
         {
@@ -29,7 +29,7 @@ namespace GodSharp.Sockets.Tcp
                 {
                     Connection?.Instance?.Shutdown(SocketShutdown.Both);
                 }
-                catch (Exception e)
+                catch (SocketException e)
                 {
                     OnException(e);
                 }
@@ -38,7 +38,7 @@ namespace GodSharp.Sockets.Tcp
                 {
                     Connection?.Instance?.Close();
                 }
-                catch (Exception e)
+                catch (SocketException e)
                 {
                     OnException(e);
                 }
