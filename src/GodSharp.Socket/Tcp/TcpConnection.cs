@@ -22,7 +22,6 @@ namespace GodSharp.Sockets.Tcp
         public bool ReconnectEnable { get; set; } = true;
         private int tryConnectCounter = 0;
         private bool started = false;
-        private bool connecting = false;
         private bool stopping = false;
 
         internal SocketEventHandler<TryConnectingEventArgs<ITcpConnection>> OnTryConnecting { get; set; }
@@ -75,6 +74,26 @@ namespace GodSharp.Sockets.Tcp
                 }
 
                 if (_local != null && _local.AddressFamily != family) throw new ArgumentException($"The {nameof(_local)} and {nameof(family)} not match.");
+                if (Instance != null)
+                {
+                    try
+                    {
+                        Instance.Shutdown(SocketShutdown.Both);
+                    }
+                    catch (Exception)
+                    {
+                    }
+
+                    try
+                    {
+                        Instance.Close();
+                    }
+                    catch (Exception)
+                    {
+                    }
+
+                    Instance = null;
+                }
 
                 Instance = new Socket(family, SocketType.Stream, ProtocolType.Tcp);
                 if (_local != null && _local.Port > 0)
@@ -104,7 +123,7 @@ namespace GodSharp.Sockets.Tcp
                 if (!ReconnectEnable) return;
                 if (!created) return;
                 if (stopping) return;
-                connecting = true;
+                if (tryConnectCounter > 0) return;
                 bool ret = false;
 
                 do
@@ -112,7 +131,8 @@ namespace GodSharp.Sockets.Tcp
                     try
                     {
                         if (stopping) return;
-                        tryConnectCounter++;
+                        Interlocked.Increment(ref tryConnectCounter);
+                        //tryConnectCounter++;
                         OnTryConnecting?.Invoke(new TryConnectingEventArgs<ITcpConnection>(this, tryConnectCounter));
                         OnConstructing();
                         ret = ConnectInternal();
@@ -140,7 +160,6 @@ namespace GodSharp.Sockets.Tcp
             }
             finally
             {
-                connecting = false;
             }
         }
 
@@ -161,8 +180,11 @@ namespace GodSharp.Sockets.Tcp
 
                 if (ret)
                 {
-                    tryConnectCounter = 0;
-                    Listener = new TcpListener(this);
+                    Interlocked.Exchange(ref tryConnectCounter, 0);
+                    //tryConnectCounter = 0;
+                    var listener = new TcpListener(this);
+                    listener.KeepAlive(KeepAliveOption);
+                    Listener = listener;
                     Listener.Start();
                 }
 

@@ -53,7 +53,6 @@ namespace GodSharp.Sockets.Udp
 
                 ListenEndPoint = SpecializedListenEndPoint ? remote : new IPEndPoint(family == AddressFamily.InterNetworkV6 ? IPAddress.IPv6Any : IPAddress.Any, 0);
                 
-
                 Instance = new Socket(family, SocketType.Dgram, ProtocolType.Udp);
                 if (local != null && local.Port > 0) Instance.Bind(local);
 
@@ -76,7 +75,9 @@ namespace GodSharp.Sockets.Udp
             {
                 if (Listener?.Running == true) return;
 
-                Listener = new UdpListener(this);
+                var listener = new UdpListener(this);
+                listener.KeepAlive(KeepAliveOption);
+                Listener = listener;
                 Listener.Start();
                 OnStarted?.Invoke(new NetClientEventArgs<IUdpConnection>(this));
             }

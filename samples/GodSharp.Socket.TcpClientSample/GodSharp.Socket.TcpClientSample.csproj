@@ -5,12 +5,12 @@
         <TargetFramework>net46</TargetFramework>
     </PropertyGroup>
 
-<!--    <ItemGroup>-->
-<!--        <ProjectReference Include="..\..\src\GodSharp.Socket\GodSharp.Socket.csproj" />-->
-<!--    </ItemGroup>-->
-
     <ItemGroup>
-      <PackageReference Include="GodSharp.Socket" Version="2021.206.17.1" />
+      <ProjectReference Include="..\..\src\GodSharp.Socket\GodSharp.Socket.csproj" />
     </ItemGroup>
+
+    <!--<ItemGroup>
+      <PackageReference Include="GodSharp.Socket" Version="2021.206.17.1" />
+    </ItemGroup>-->
 
 </Project>

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Net.Sockets;
 
 namespace GodSharp.Sockets.Abstractions
 {
@@ -119,9 +118,9 @@ namespace GodSharp.Sockets.Abstractions
             }
         }
 
-        internal protected virtual void KeepAlive(bool keepAlive = true, int interval = 5000, int span = 1000)
+        internal virtual void KeepAlive(KeepAliveOptions options)
         {
-            KeepAliveOption = new KeepAliveOptions(keepAlive, interval, span);
+            KeepAliveOption = options;
         }
 
         protected abstract T OnEndReceive<T>(IAsyncResult result) where T : ReceiveResult, new();
