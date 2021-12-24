@@ -150,6 +150,11 @@ namespace GodSharp.Sockets
         /// <param name="span">The span for retry check connection,unit is ms.</param>
         public static void KeepAlive(this Socket socket, bool keepAlive = true, int interval = 5000, int span = 1000)
         {
+            if (Environment.OSVersion.Platform != PlatformID.Win32S ||
+                Environment.OSVersion.Platform != PlatformID.Win32Windows ||
+                Environment.OSVersion.Platform != PlatformID.WinCE ||
+                Environment.OSVersion.Platform != PlatformID.Win32NT)
+                return;
             uint dummy = 0;
             byte[] options = new byte[Marshal.SizeOf(dummy) * 3];
             BitConverter.GetBytes((uint)(keepAlive ? 1 : 0)).CopyTo(options, 0);
