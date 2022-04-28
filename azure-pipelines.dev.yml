@@ -9,7 +9,7 @@
 #
 #     - To trigger manual generation invoke:
 #
-#         nuke --generate-configuration AzurePipelines --host AzurePipelines
+#         nuke --generate-configuration AzurePipelines_dev --host AzurePipelines
 #
 # </auto-generated>
 # ------------------------------------------------------------------------------
@@ -17,7 +17,7 @@
 trigger:
   branches:
     include:
-      - master
+      - dev
 
 stages:
   - stage: windows_latest
@@ -26,13 +26,10 @@ stages:
     pool:
       vmImage: 'windows-latest'
     jobs:
-      - job: Push
-        displayName: 'Push'
+      - job: Compile
+        displayName: 'Compile'
         dependsOn: [  ]
         steps:
           - task: CmdLine@2
             inputs:
-              script: './build.cmd Initial Clean Restore Compile Copy Artifacts Push --skip'
-            env:
-              NuGetApiKey: $(NuGetApiKey)
-              MyGetApiKey: $(MyGetApiKey)
+              script: './build.cmd Initial Clean Restore Compile --skip'

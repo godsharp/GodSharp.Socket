@@ -1,50 +1,53 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <RootNamespace>GodSharp.Sockets</RootNamespace>
-    <AssemblyName>GodSharp.Socket</AssemblyName>
-    <Title>GodSharp.Socket</Title>
-    <Company>GodSharp</Company>
-    <Authors>seayxu</Authors>
-    <RepositoryType>git</RepositoryType>
-    <PackageProjectUrl>https://github.com/godsharp/GodSharp.Socket.git</PackageProjectUrl>
-    <PackageIconUrl>https://avatars3.githubusercontent.com/u/26563296</PackageIconUrl>
-    <PackageLicenseUrl>https://github.com/godsharp/GodSharp.Socket/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Copyright>Copyright © GodSharp 2017-2021</Copyright>
-    <NeutralLanguage>en-US</NeutralLanguage>
-    <Description>A easy to used socket server and client for .NET.</Description>
-    <OutputPath>$(SolutionDir)\output\$(AssemblyName)</OutputPath>
-<!--    <DocumentationFile>$(SolutionDir)\output\$(AssemblyName)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>-->
-    <!--<TargetFramework>netstandard2.0</TargetFramework>-->
-    <TargetFrameworks>net35;net40;net45;net46;net47;netstandard2.0;net5.0;</TargetFrameworks>
-<!--    <TargetFrameworks Condition="'$(LibraryFrameworks)'==''">net35;net40;net45;net46;net47;netstandard2.0;net50;</TargetFrameworks>-->
-<!--    <TargetFrameworks Condition="'$(LibraryFrameworks)'!=''">$(LibraryFrameworks)</TargetFrameworks>-->
-    <FrameworkPathOverride Condition="'$(TargetFramework)' == 'net35'">$(MSBuildProgramFiles32)\Reference Assemblies\Microsoft\Framework\.NETFramework\v3.5\Profile\Client</FrameworkPathOverride>
-    <AutomaticallyUseReferenceAssemblyPackages Condition=" '$(TargetFramework)' == 'net35' ">false</AutomaticallyUseReferenceAssemblyPackages>
-  </PropertyGroup>  
-  
-  <PropertyGroup Condition="'$(TargetFramework)'=='net35'">
-    <DefineConstants>NET35;$(AdditionalConstants)</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)'=='net40'">
-    <DefineConstants>NET40;$(AdditionalConstants)</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)'=='net45'">
-    <DefineConstants>NET45;$(AdditionalConstants)</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)'=='net46'">
-    <DefineConstants>NET46;$(AdditionalConstants)</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)'=='net47'">
-    <DefineConstants>NET47;$(AdditionalConstants)</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
-    <DefineConstants>NETSTANDARD2_0;$(AdditionalConstants)</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)'=='net5.0'">
-    <DefineConstants>NET50;$(AdditionalConstants)</DefineConstants>
-  </PropertyGroup>
-  
-  <Import Project="..\..\build\version.props" />
+	<PropertyGroup>
+		<RootNamespace>GodSharp.Sockets</RootNamespace>
+		<AssemblyName>GodSharp.Socket</AssemblyName>
+		<Title>GodSharp.Socket</Title>
+		<Company>GodSharp</Company>
+		<Authors>seayxu</Authors>
+		<RepositoryType>git</RepositoryType>
+		<PackageProjectUrl>https://github.com/godsharp/GodSharp.Socket.git</PackageProjectUrl>
+		<PackageIconUrl>https://avatars3.githubusercontent.com/u/26563296</PackageIconUrl>
+		<PackageLicenseUrl>https://github.com/godsharp/GodSharp.Socket/blob/master/LICENSE</PackageLicenseUrl>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+		<Copyright>Copyright © GodSharp 2017-2022</Copyright>
+		<NeutralLanguage>en-US</NeutralLanguage>
+		<Description>A easy to used socket server and client for .NET.</Description>
+		<OutputPath>$(SolutionDir)\output\$(AssemblyName)</OutputPath>
+		<!--    <DocumentationFile>$(SolutionDir)\output\$(AssemblyName)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>-->
+		<!--<TargetFramework>netstandard2.0</TargetFramework>-->
+		<TargetFrameworks>net35;net40;net45;net46;net47;netstandard2.0;net5.0;net6.0;</TargetFrameworks>
+		<!--    <TargetFrameworks Condition="'$(LibraryFrameworks)'==''">net35;net40;net45;net46;net47;netstandard2.0;net50;</TargetFrameworks>-->
+		<!--    <TargetFrameworks Condition="'$(LibraryFrameworks)'!=''">$(LibraryFrameworks)</TargetFrameworks>-->
+		<FrameworkPathOverride Condition="'$(TargetFramework)' == 'net35'">$(MSBuildProgramFiles32)\Reference Assemblies\Microsoft\Framework\.NETFramework\v3.5\Profile\Client</FrameworkPathOverride>
+		<AutomaticallyUseReferenceAssemblyPackages Condition=" '$(TargetFramework)' == 'net35' ">false</AutomaticallyUseReferenceAssemblyPackages>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(TargetFramework)'=='net35'">
+		<DefineConstants>NET35;$(AdditionalConstants)</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(TargetFramework)'=='net40'">
+		<DefineConstants>NET40;$(AdditionalConstants)</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(TargetFramework)'=='net45'">
+		<DefineConstants>NET45;$(AdditionalConstants)</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(TargetFramework)'=='net46'">
+		<DefineConstants>NET46;$(AdditionalConstants)</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(TargetFramework)'=='net47'">
+		<DefineConstants>NET47;$(AdditionalConstants)</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+		<DefineConstants>NETSTANDARD2_0;$(AdditionalConstants)</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(TargetFramework)'=='net5.0'">
+		<DefineConstants>NET50;$(AdditionalConstants)</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(TargetFramework)'=='net6.0'">
+		<DefineConstants>NET60;$(AdditionalConstants)</DefineConstants>
+	</PropertyGroup>
+
+	<Import Project="..\..\build\version.props" />
 </Project>

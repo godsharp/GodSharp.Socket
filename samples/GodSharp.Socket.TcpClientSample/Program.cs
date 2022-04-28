@@ -12,7 +12,7 @@ namespace GodSharp.Socket.TcpClientSample
         static void Main(string[] args)
         {
             Console.WriteLine("GodSharp.TcpClient!");
-            TcpClient client = new TcpClient("192.168.8.131", 5000,10002)
+            TcpClient client = new TcpClient("192.168.8.131", 5000,10002,connectTimeout:1000)
             {
                 //ConnectTimeout = 2000,
                 //ReconnectEnable = true,

@@ -232,9 +232,13 @@ namespace GodSharp.Sockets.Tcp
 
             var ret = data.WaitConnected(millisecondsTimeout);
 
-            if (!ret) data.Connected = false;
+            if (!ret)
+            {
+                data.SetTimeout();
+                data.Connected = false;
+            }
 
-            data.WaitCompleted();
+            if (millisecondsTimeout < 1) data.WaitCompleted();
 
             if (!ret) throw new SocketException((int)SocketError.TimedOut);
 
@@ -250,7 +254,8 @@ namespace GodSharp.Sockets.Tcp
             {
                 return;
             }
-            
+
+            if (data.Timeouted) return;
             bool? isConnect = null;
 
             data.SetConnected();
@@ -318,6 +323,7 @@ namespace GodSharp.Sockets.Tcp
             private EventWaitHandle CompletedWaitHandle { get; set; }
 
             public bool? Connected { get; set; }
+            public bool Timeouted { get; set; } = false;
 
             public Exception Exception { get; set; }
 
@@ -328,6 +334,7 @@ namespace GodSharp.Sockets.Tcp
             public bool WaitCompleted() => CompletedWaitHandle.WaitOne();
 
             public bool SetCompleted() => CompletedWaitHandle.Set();
+            public bool SetTimeout() => Timeouted = true;
 
             public ConnectionData()
             {
